@@ -17,7 +17,7 @@ export default function Layout({
     <>
       <main className='xl:flex'>
         <Sidebar open={open} />
-        <section className='flex flex-col xl:w-full'>
+        <section className='flex flex-col xl:flex-1'>
           <Topbar menuOpen={open} setMenuOpen={setOpen} />
           <AnimatePresence>
             {open && (
@@ -28,7 +28,7 @@ export default function Layout({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
-                className="fixed inset-0 bg-black/40 z-10 mt-13 xl:hidden"
+                className="fixed inset-0 h-screen bg-black/40 z-15 xl:hidden"
               />
             )}
           </AnimatePresence>

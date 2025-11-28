@@ -7,31 +7,57 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
   return (
     <>
       {/* MOBILE HEADER */}
-      <header className='xl:hidden flex items-center justify-between border-solid border-b border-gray-300 h-13 px-4 z-10'>
+      <header className='fixed bg-white w-full xl:hidden flex items-center justify-between border-solid border-b border-gray-300 h-13 px-4 z-19'>
         <motion.div
           onClick={() => setMenuOpen(!menuOpen)}
           animate={{ x: menuOpen ? '75vw' : 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
-          {!menuOpen ?
-            <><Bars3Icon height={32} className='cursor-pointer transition-all duration-200 hover:opacity-85' /></>
-            :
-            <><XMarkIcon className='cursor-pointer transition-all duration-200 hover:opacity-85' height={32} /></>
-          }
+          <motion.div
+            key={menuOpen ? "open" : "closed"}
+            initial={{ opacity: 0, rotate: -90 }}
+            animate={{ opacity: 1, rotate: 0 }}
+            exit={{ opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="cursor-pointer"
+          >
+            {!menuOpen ? (
+              <Bars3Icon height={32} />
+            ) : (
+              <XMarkIcon height={32} />
+            )}
+          </motion.div>
         </motion.div>
 
         <ArrowLeftEndOnRectangleIcon height={32} />
       </header>
 
       {/* DESKTOP HEADER */}
-      <header onClick={() => setMenuOpen(!menuOpen)} 
-        className='hidden xl:flex items-center justify-between border-solid border-b border-gray-300 h-13 px-4 z-10'
+      <header
+        className={`
+          hidden xl:flex sticky top-0 self-start
+          w-full bg-white items-center justify-between 
+          border-b border-gray-300 h-13 px-4 z-19
+          transition-all duration-300
+        `}
       >
-          {!menuOpen ?
-            <><Bars3Icon height={32} className='cursor-pointer transition-all duration-200 hover:opacity-85' /></>
-            :
-            <><XMarkIcon className='cursor-pointer transition-all duration-200 hover:opacity-85' height={32} /></>
-          }
+        <motion.div
+          key={menuOpen ? "open" : "closed"}
+          initial={{ opacity: 0, rotate: -90 }}
+          animate={{ opacity: 1, rotate: 0 }}
+          exit={{ opacity: 0, rotate: 90 }}
+          transition={{ duration: 0.3 }}
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="cursor-pointer"
+        >
+          {!menuOpen ? (
+            <Bars3Icon height={32} />
+          ) : (
+            <XMarkIcon height={32} />
+          )}
+        </motion.div>
+
         <ArrowLeftEndOnRectangleIcon height={32} />
       </header>
     </>

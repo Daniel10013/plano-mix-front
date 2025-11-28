@@ -5,8 +5,8 @@ export default function NotFound() {
     return (
         <main className="w-full h-screen flex justify-center items-center flex-col">
             <Image src='/404/error-animate.svg' alt="Erro 404" height={500} width={500} />
-            <h1 className="text-4xl">Oops! Página não encontrada!</h1>
-            <Link href='/home' className="bg-[#8173FF] rounded-[10px] w-[25%] mt-10 text-center p-2 text-[20px] text-white">
+            <h1 className="w-full text-center text-2xl xl:text-4xl">Oops! Página não encontrada!</h1>
+            <Link href='/home' className="bg-[#8173FF] rounded-[10px] w-[60%] xl:w-[25%] mt-10 text-center p-2 text-[20px] text-white">
                 Voltar para a home
             </Link>
         </main>

@@ -9,8 +9,6 @@ import { HomeIcon, BuildingOfficeIcon, BuildingStorefrontIcon, MapPinIcon, UserG
 export default function Sidebar({ open }: { open: boolean }) {
 
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [hideText, setHideText] = useState<boolean>(false);
   const [alignClass, setAlignClass] = useState<string>('justify-start')
 
   const items = [
@@ -29,7 +27,7 @@ export default function Sidebar({ open }: { open: boolean }) {
     <>
       {/* MOBILE */}
       <motion.aside
-        className="absolute xl:hidden  w-[70%] h-screen bg-white border-r border-gray-300 z-20 p-4 shadow-lg py-12 px-3 flex items-center flex-col"
+        className="fixed xl:hidden  w-[70%] h-screen bg-white border-r border-gray-300 z-20 p-4 shadow-lg py-12 px-3 flex items-center flex-col"
         initial={{ x: '-100%' }}
         animate={{ x: open ? '0%' : '-100%' }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -79,52 +77,8 @@ export default function Sidebar({ open }: { open: boolean }) {
 
 
       {/* DESKTOP */}
-      {/* <aside className="hidden xl:flex xl:w-[15%] h-screen bg-white border-r border-gray-300 z-50 p-4 shadow-lg py-12 px-3 items-center flex-col">
-        <h1 className="text-[#8173FF] text-7xl mb-6 weight font-normal">MIX</h1>
-
-        <div className='w-full flex flex-col gap-3'>
-          <div className='w-full flex flex-col gap-3'>
-            {items.map((item) => {
-              var url = pathname == '/' ? '/home' : pathname;
-              const active = url === item.url;
-              return ((
-                <div key={item.url} className={`
-                flex items-center px-2 py-1 text-[22px] rounded-[10px] cursor-pointer transition-all duration-200
-                ${active ? "bg-[#8173FF] text-white" : "text-[#6E6E6E] hover:bg-[#8173FF] hover:text-white"}
-              `}>
-                  <Link href={item.url} className='flex gap-2'>
-                    <item.icon width={28} className="relative bottom-[3px]" />
-                    <span className='relative top-[3px]' >{item.name}</span>
-                  </Link>
-                </div>
-              ))
-            }
-            )}
-            <div className='flex flex-col justify-center items-center text-[#6E6E6E] mt-4'>
-              <span className='' >Administração</span>
-              <hr className='w-full text-gray-300' />
-            </div>
-            {itemsAdm.map((item) => {
-              var url = pathname == '/' ? '/home' : pathname;
-              const active = url === item.url;
-              return ((
-                <div key={item.url} className={`
-                flex items-center px-2 py-1 text-[22px] rounded-[10px] cursor-pointer transition-all duration-200
-                ${active ? "bg-[#8173FF] text-white" : "text-[#6E6E6E] hover:bg-[#8173FF] hover:text-white"}
-              `}>
-                  <Link href={item.url} className='flex gap-2'>
-                    <item.icon width={28} className="relative bottom-[3px]" />
-                    <span className='relative top-[3px]' >{item.name}</span>
-                  </Link>
-                </div>
-              ))
-            }
-            )}
-          </div>
-        </div>
-      </aside> */}
       <motion.aside
-        className="hidden xl:flex xl:w-[15%] h-screen bg-white border-r border-gray-300 z-50 p-4 shadow-lg py-12 px-3 items-center flex-col overflow-hidden"
+        className="hidden xl:flex sticky top-0 self-start xl:w-[15%] h-screen bg-white border-r border-gray-300 z-50 p-4 shadow-lg py-12 px-3 items-center flex-col overflow-hidden"
         initial={{ width: '15%' }}
         animate={{ width: open ? '15%' : '4%' }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
