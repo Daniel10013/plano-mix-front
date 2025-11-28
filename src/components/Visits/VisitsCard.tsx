@@ -12,7 +12,7 @@ export default function VisitsCard ({visitObj, isHome}: {visitObj: VisitCard, is
                 transition-transform duration-200 hover:translate-y-1 hover:border-[#595959]
             `}
         >
-            <div className='flex w-full justify-center item-center'>
+            <div className='flex w-full justify-center xl:justify-between item-center'>
                 <div className="flex w-[80%]  xl:justify-start gap-1">
                     <MapPinIcon  height={28} width={28}/>
                     <h1 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap">{visitObj.shopping_name}</h1>
