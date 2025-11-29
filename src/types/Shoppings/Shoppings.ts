@@ -1,4 +1,4 @@
-export type ShoppingCard = {
+export type Shopping = {
     id: number,
     name: string,
     description: string,

@@ -7,8 +7,8 @@ export default function VisitsCard ({visitObj, isHome}: {visitObj: VisitCard, is
     return (
         <Link href={'/visit/' + visitObj.id} 
             className={`
-                flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[300px] xl:h-[220] bg-white  
-                w-[90%] xl:w-1/3
+                flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[250px] xl:h-[220] bg-white  
+                w-full xl:w-1/3
                 transition-transform duration-200 hover:translate-y-1 hover:border-[#595959]
             `}
         >

@@ -57,7 +57,7 @@ export default function HomeShoppings() {
                         <>
                         {
                             shoppings.map((s) => (
-                                <ShoppingCard shoppingObj={s} key={s.id} isHome={true} />
+                                <ShoppingCard shoppingObj={s} key={s.id} isHome={true}  />
                             ))
                         }
                             <Link href={'/shoppings'} className="w-1/2 p-3 bg-[#8173FF] text-white text-[24px] rounded-[10px] text-center
