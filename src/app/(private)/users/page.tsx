@@ -1,5 +1,5 @@
-import HeaderUser from "./HeaderUser";
-import ListUser from "./ListUser";
+import HeaderUser from "../../../components/Users/HeaderUser";
+import ListUser from "../../../components/Users/ListUser";
 
 
 export default function PageUser() {
