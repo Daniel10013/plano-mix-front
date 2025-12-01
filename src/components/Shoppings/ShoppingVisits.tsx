@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from "react";
 import type { Visit } from "@/src/types/Visits/Visits";
+import CompareVisitModal from "@/src/components/Shoppings/Modal/ModalCompareVisitShopping";
 import { UserIcon, CalendarIcon, ExclamationCircleIcon, EyeIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+
 
 export default function ShoppingVisits({ id }: { id: number }) {
 
     const [searchInput, setSearchInput] = useState<string>('');
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
     const [shoppingVisits, setShoppingVisits] = useState<Visit[]>([
         {
             id: 1,
@@ -52,13 +55,14 @@ export default function ShoppingVisits({ id }: { id: number }) {
         },
     ]);
 
-    // const [selectedId, setSelectedId] = useState<number>();
-    // const [selected2Id, setSelected2Id] = useState<number>();
+    const [selectedId, setSelectedId] = useState<number>(0);
+    const [selected2Id, setSelected2Id] = useState<number>(0);
 
 
 
     return (
         <>
+            <CompareVisitModal id1={selectedId} id2={selected2Id} isOpen={modalIsOpen} onClose={()=>{setModalIsOpen(false)}}/>
             <div className="flex flex-col gap-4 xl:gap-2">
                 <div className="flex flex-col xl:flex-row gap-2">
                     <div className="w-full xl:w-[70%] flex items-center gap-3 bg-white rounded-[10px] border border-gray-300 focus-within:border-[#8173FF] transition-all duration-200 px-2 py-2">
@@ -66,7 +70,8 @@ export default function ShoppingVisits({ id }: { id: number }) {
                         <input type="password" onChange={(e) => { setSearchInput(e.target.value) }} value={searchInput} placeholder="Pesquisar Visita por usuário ou data..."
                             className=" w-[80%] outline-none text-2xl text-gray-700 placeholder-[#a9b1bf]" />
                     </div>
-                    <button className="bg-[#6FD98B] w-full xl:w-[30%] text-2xl p-2 xl:p-0 xl:text-[20px] rounded-[10px] transition-all duration-200 hover:bg-[#35c95d] cursor-pointer">
+                    <button onClick={()=>{setModalIsOpen(true)}}
+                    className="bg-[#6FD98B] w-full xl:w-[30%] text-2xl p-2 xl:p-0 xl:text-[20px] rounded-[10px] transition-all duration-200 hover:bg-[#35c95d] cursor-pointer">
                         Comparar Visitas
                     </button>
                 </div>

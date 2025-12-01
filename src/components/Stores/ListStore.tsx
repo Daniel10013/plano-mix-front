@@ -1,14 +1,16 @@
 "use client"
 
-import { PlusIcon } from "@heroicons/react/24/outline"
 import { SearchIcon } from "lucide-react"
 import { useState } from "react";
 import Select from "react-select";
+import { PlusIcon } from "@heroicons/react/24/outline"
+import ModalCreateStore from "./Modal/ModalCreateStore";
+import type { Store } from "@/src/types/Stores/Stores.ts"
 import StoreCard from "@/src/components/Stores/StoreCard";
-import type { Store } from "@/src/types/Stores/Store.ts"
 
 export default function ListStore() {
     const [searchInput, setSearchInput] = useState<string>('');
+    const [isOpen, setIsOpen] = useState<boolean>(false)
     const [stores, setStores] = useState<Store[]>(
         [{
             id: 1,
@@ -44,7 +46,7 @@ export default function ListStore() {
             classification: "Ancora",
             segment: "Alimentação",
             activity: "Fast-Food"
-        },])
+    },])
 
 
     const classification = [
@@ -56,10 +58,12 @@ export default function ListStore() {
         { "id": 6, "name": "ENTRETENIMENTO" },
         { "id": 7, "name": "MALL E MERCHANDISING" }
     ]
+    
     const optionsClassification = classification.map(item => ({
         value: item.id,
         label: item.name
     }));
+
     const segment = [
         { "id": 1, "name": "MODA", "classification_id": 1 },
         { "id": 2, "name": "HIPERMERCADO / SUPERMERCADO / ATACAREJO", "classification_id": 1 },
@@ -80,6 +84,14 @@ export default function ListStore() {
         { "id": 17, "name": "ALIMENTAÇÃO E BEBIDAS", "classification_id": 1 },
         { "id": 18, "name": "OUTROS", "classification_id": 1 }
     ]
+
+    const activity = [
+        {id: 1, name: 'Activity 1', segment_id: 1},
+        {id: 2, name: 'Activity 2', segment_id: 1},
+        {id: 3, name: 'Activity 3', segment_id: 1},
+        {id: 4, name: 'Activity 4', segment_id: 1},
+    ]
+    
     const optionsSegment = segment.map(item => ({
         value: item.id,
         label: item.name
@@ -93,8 +105,16 @@ export default function ListStore() {
         console.log(id);
     }
 
+    const loadStores = () => {
+
+    }
+
     return (
         <>
+            <ModalCreateStore 
+                isOpen={isOpen} onClose={()=>{setIsOpen(false)}} 
+                reloadStores={()=>{loadStores()}} classifications={classification} segments={segment} activity={activity}
+                />
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex">
                     <span className="w-[80%] flex justify-start">
@@ -165,7 +185,8 @@ export default function ListStore() {
                         />
                     </div>
                     <div className="hidden w-full xl:w-[20%] xl:flex justify-center">
-                        <button className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
+                        <button onClick={()=>{setIsOpen(true)}}
+                        className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
                             transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
                             <span className="xl:block text-2xl">Cadastrar</span><PlusIcon height={28} />
                         </button>

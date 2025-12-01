@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SearchIcon, PlusIcon } from "lucide-react"
+import ModalCreateShopping from "./Modal/ModalCreateShopping";
 import ShoppingCard from "@/src/components/Shoppings/ShoppingCards";
 import type { Shopping as ShoppingType } from "@/src/types/Shoppings/Shoppings";
 
 export default function ShoppingPage() {
 
     const [searchInput, setSearchInput] = useState<string>('');
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
     const [shoppings, setShoppings] = useState<ShoppingType[]>([
         {
             id: 1,
@@ -67,6 +69,7 @@ export default function ShoppingPage() {
 
     return (
         <>
+            <ModalCreateShopping isOpen={modalIsOpen} onClose={()=> {setModalIsOpen(false)}}/>
             <div className="w-full py-3 px-4 mt-14 xl:mt-1 flex flex-col gap-5">
                 <h1 className="w-full text-center text-4xl xl:text-left">Shoppings Cadastrados</h1>
                 <div className="flex gap-1 justify-between">
@@ -74,7 +77,8 @@ export default function ShoppingPage() {
                         <SearchIcon className="h-8 w-8 text-[#a9b1bf]" />
                         <input type="text" onChange={(e) => { setSearchInput(e.target.value) }} value={searchInput} placeholder="Pesquisar Shoppings..." className="w-[80%] outline-none text-2xl text-gray-700 placeholder-[#a9b1bf]" />
                     </div>
-                    <button className="w-[13%] bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
+                    <button onClick={()=>{setModalIsOpen(!modalIsOpen)}}
+                        className="w-[13%] bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
                         <span className="hidden xl:block text-2xl">Cadastrar</span><PlusIcon />
                     </button>
                 </div>

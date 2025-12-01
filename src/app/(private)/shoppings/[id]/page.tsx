@@ -3,7 +3,7 @@ import ShoppingStores from "@/src/components/Shoppings/ShoppingStores";
 import ShoppingVisits from "@/src/components/Shoppings/ShoppingVisits";
 import ShoppingDetails from "@/src/components/Shoppings/ShoppingDetails"
 
-export default async function Page({ params }: { params: Promise<{ id: string }> })  {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const numberId = Number(id)
     if (!Number.isInteger(numberId) || numberId <= 0) {
