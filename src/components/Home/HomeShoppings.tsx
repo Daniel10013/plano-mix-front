@@ -2,12 +2,12 @@
 
 import Link from "next/link"
 import { useState } from "react";
-import type { ShoppingCard as ShoppingType } from "@/src/types/Shoppings/Shoppings";
+import type { Shopping } from "@/src/types/Shoppings/Shoppings";
 import ShoppingCard from "../Shoppings/ShoppingCards";
 
 export default function HomeShoppings() {
 
-    const [shoppings, setShoppings] = useState<ShoppingType[]>([
+    const [shoppings, setShoppings] = useState<Shopping[]>([
         {
             id: 1,
             name: 'Via Shopping',

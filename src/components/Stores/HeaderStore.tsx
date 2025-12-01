@@ -7,7 +7,7 @@ export default function HeaderStore() {
                 <div className="w-full flex">
                     <div className="mt-12 xl:w-[65%] w-full flex flex-col xl:items-start gap-8">
                         <h1 className="text-4xl">Lojas cadastradas</h1>
-                        <p className="text-2xl text-gray-500 w-[70%]">Essa tela é para o cadastro de lojas geral, ou seja, as lojas cadastradas aqui, serão para serem usadas ao adicionar lojas para os shoppings!
+                        <p className=" text-2xl text-gray-500 text-center w-full xl:w-[70%] xl:text-left">Essa tela é para o cadastro de lojas geral, ou seja, as lojas cadastradas aqui, serão para serem usadas ao adicionar lojas para os shoppings!
                             <br></br>
                             <br></br>
                             Além disso, aqui você pode ver as lojas cadastradas, e alterar suas informações!</p>

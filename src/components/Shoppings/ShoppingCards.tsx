@@ -1,12 +1,12 @@
 'use client';
 
 import Link from "next/link";
-import type { ShoppingCard } from "@/src/types/Shoppings/Shoppings";
+import type { Shopping } from "@/src/types/Shoppings/Shoppings";
 import { BuildingOfficeIcon, MapPinIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 
 export default function ShoppingCard({ shoppingObj, isHome, reloadCards }: {
-    shoppingObj: ShoppingCard, isHome: boolean, reloadCards?: () => void
+    shoppingObj: Shopping, isHome: boolean, reloadCards?: () => void
 }) {
 
     const handleEdit = async (id: number) => {

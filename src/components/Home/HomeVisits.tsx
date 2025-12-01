@@ -3,28 +3,31 @@
 import Link from "next/link"
 import { useState } from "react";
 import VisitsCard from "../Visits/VisitsCard";
-import type { VisitCard } from "@/src/types/Visits/Visits";
+import type { Visit } from "@/src/types/Visits/Visits";
 
 export default function HomeVisits() {
 
-    const [visits, setVisits] = useState<VisitCard[]>([
+    const [visits, setVisits] = useState<Visit[]>([
         {
             id: 1,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
         {
             id: 2,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
         {
             id: 3,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
         
     ])

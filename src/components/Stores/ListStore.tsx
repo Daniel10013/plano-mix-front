@@ -5,7 +5,7 @@ import { SearchIcon } from "lucide-react"
 import { useState } from "react";
 import Select from "react-select";
 import StoreCard from "@/src/components/Stores/StoreCard";
-import type {Store} from "@/src/types/Stores/Store.ts"
+import type { Store } from "@/src/types/Stores/Store.ts"
 
 export default function ListStore() {
     const [searchInput, setSearchInput] = useState<string>('');
@@ -117,14 +117,21 @@ export default function ListStore() {
                             className="w-full text-2xl"
                             styles={{
                                 container: (base) => ({ ...base, flex: 1 }),
-                                control: (base) => ({
+                                control: (base, state) => ({
                                     ...base,
                                     height: "100%",
+                                    cursor: "pointer",
                                     minHeight: "2.75rem",
                                     boxShadow: "none",
-                                    borderRadius: "10px"
-                                })
+                                    borderRadius: "10px",
+                                    borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                    "&:hover": {
+                                        borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                    },
+                                }),
+                                
                             }}
+                            noOptionsMessage={() => "Nenhum item encontrado!"}
                             placeholder="Classificação"
                             options={optionsClassification}
                             onChange={(v) => handleFilterClassification(v!.value)}
@@ -136,14 +143,21 @@ export default function ListStore() {
                             className="w-full text-2xl"
                             styles={{
                                 container: (base) => ({ ...base, flex: 1 }),
-                                control: (base) => ({
+                                control: (base, state) => ({
                                     ...base,
                                     height: "100%",
+                                    cursor: "pointer",
                                     minHeight: "2.75rem",
                                     boxShadow: "none",
-                                    borderRadius: "10px"
-                                })
+                                    borderRadius: "10px",
+                                    borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                    "&:hover": {
+                                        borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                    },
+                                }),
+                                
                             }}
+                            noOptionsMessage={() => "Nenhum item encontrado!"}
                             placeholder="Segmento"
                             options={optionsSegment}
                             onChange={(v) => handleFilterSegment(v!.value)}
