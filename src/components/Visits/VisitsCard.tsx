@@ -1,9 +1,8 @@
 import Link from "next/link";
-import type { VisitCard } from "@/src/types/Visits/Visits";
-import { MapPinIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import type { Visit } from "@/src/types/Visits/Visits";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 
-
-export default function VisitsCard({ visitObj, isHome }: { visitObj: VisitCard, isHome: boolean }) {
+export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHome: boolean }) {
     const showDetails = (id: number) =>{
         console.log(id);
     }
@@ -17,7 +16,7 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: VisitCard, 
                         className={`
                 flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[250px] xl:h-[220] bg-white  
                 w-full xl:w-1/3
-                transition-transform duration-200 hover:translate-y-1 hover:border-[#595959]
+                transition-transform duration-200 cursor-pointer  hover:border-[#707070]
             `}
                     >
                         <div className='flex w-full justify-center xl:justify-between item-center'>
@@ -38,10 +37,10 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: VisitCard, 
                 (
                     <div onClick={() =>{showDetails(visitObj.id)}}
                         className={`
-                flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[250px] xl:h-[220] bg-white  
-                w-full xl:w-full
-                transition-transform duration-200 hover:translate-y-1 hover:border-[#595959]
-            `}
+                            flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[250px] xl:h-[220] bg-white  
+                            w-full xl:w-full cursor-pointer
+                            transition-transform duration-200 hover:border-[#707070]
+                        `}
                     >
                         <div className='flex w-full justify-center xl:justify-between item-center'>
                             <div className="flex w-[80%]  xl:justify-start gap-1">

@@ -1,12 +1,12 @@
 "use client"
 
-import { SearchIcon } from "lucide-react"
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import Link from "next/link";
 import Select from "react-select";
 import VisitsCard from "./VisitsCard";
-import type { VisitCard } from "@/src/types/Visits/Visits";
-import Link from "next/link";
+import { SearchIcon } from "lucide-react"
+import { useState, useEffect } from "react";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import type { Visit } from "@/src/types/Visits/Visits";
 
 export default function HeaderVisit() {
     const [searchInput, setSearchInput] = useState<string>('');
@@ -40,24 +40,27 @@ export default function HeaderVisit() {
             name: "Paragem"
         }
     ]
-    const [visits, setVisits] = useState<VisitCard[]>([
+    const [visits, setVisits] = useState<Visit[]>([
         {
             id: 1,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
         {
             id: 2,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
         {
             id: 3,
             shopping_name: 'Via Shopping',
             description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            date: '11/10/2025'
+            date: '11/10/2025',
+            user: 'Daniel'
         },
     ])
 
@@ -94,14 +97,20 @@ export default function HeaderVisit() {
                                     className="w-full text-2xl"
                                     styles={{
                                         container: (base) => ({ ...base, flex: 1 }),
-                                        control: (base) => ({
+                                        control: (base, state) => ({
                                             ...base,
                                             height: "100%",
+                                            cursor: "pointer",
                                             minHeight: "2.75rem",
                                             boxShadow: "none",
-                                            borderRadius: "10px"
-                                        })
+                                            borderRadius: "10px",
+                                            borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                            "&:hover": {
+                                                borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                            },
+                                        }),
                                     }}
+                                    noOptionsMessage={() => "Nenhum item encontrado!"}
                                     placeholder="Selecione um Shopping"
                                     options={options}
                                     onChange={(v) => handleFilter(v!.value)}
@@ -110,10 +119,10 @@ export default function HeaderVisit() {
                             </div>
                         </div>
                         <div className="hidden w-full xl:w-[20%] xl:flex justify-center">
-                            <button className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
+                            <Link href={'/create-visit'} className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
                             transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
                                 <span className="xl:block text-2xl">Adicionar Visita</span><PlusIcon height={28} />
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
