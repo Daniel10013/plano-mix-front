@@ -1,9 +1,44 @@
 'use client';
 
-import { Bars3Icon, ArrowLeftEndOnRectangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { logout as endSession } from '@/src/services/auth.service';
+import { Bars3Icon, ArrowLeftEndOnRectangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (value: boolean) => void; }) {
+
+  const router = useRouter();
+
+  const handleLogoutClick = async () => {
+    Swal.fire({
+      title: 'Logout',
+      text: 'Deseja encerrar sua sessão?', showLoaderOnConfirm: true,
+      icon: 'warning', showCancelButton: true, cancelButtonText: 'Não',
+      showConfirmButton: true, confirmButtonText: 'Sim'
+    }).then(async (action)=> {
+      if(action.isConfirmed){
+        await logout();
+      }
+    })
+  }
+
+  const logout = async () =>  {
+    const {status, message} = await endSession();
+    if(status == false){
+      Swal.close();
+      Swal.fire({
+        title: 'Erro!',
+        text: message,
+        icon: 'error', confirmButtonText: 'Ok'
+      });
+      return;
+    }
+
+    sessionStorage.setItem("showLogoutToast", "1");
+    router.push('/login');
+  }
+
   return (
     <>
       {/* MOBILE HEADER */}
@@ -30,7 +65,7 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
           </motion.div>
         </motion.div>
 
-        <ArrowLeftEndOnRectangleIcon height={32} />
+        <ArrowLeftEndOnRectangleIcon height={32} onClick={()=>{handleLogoutClick()}} className='cursor-pointer' />
       </header>
 
       {/* DESKTOP HEADER */}
@@ -58,7 +93,7 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
           )}
         </motion.div>
 
-        <ArrowLeftEndOnRectangleIcon height={32} />
+        <ArrowLeftEndOnRectangleIcon height={32}  onClick={()=>{handleLogoutClick()}} className='cursor-pointer transition-all duration-200 hover:opacity-60' />
       </header>
     </>
   );

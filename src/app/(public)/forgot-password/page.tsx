@@ -1,24 +1,56 @@
 "use client";
 
-import { useState } from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react'
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
+import { sendResetEmail } from '@/src/services/user.service';
+import Swal from 'sweetalert2';
 
-export default function ResetPassword(){
+export default function ResetPassword() {
 
     const [email, setEmail] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
-    const handleSubmit = () => {
-        if(email == ''){
+    const handleSubmit = async () => {
+        if (email == '') {
             setErrorMessage('O email não pode ser vazio!');
             return;
         }
 
+        if (email.includes('@') == false || email.includes('.') == false) {
+            setErrorMessage('E-mail inválido!');
+            return;
+        }
         setErrorMessage('');
+
+        try {
+            setIsLoading(true);
+            const { status, message } = await sendResetEmail(email);
+
+            if(status == true){
+                Swal.fire({
+                    icon: 'success', title: 'Confira seu e-mail!',
+                    text: message, confirmButtonColor: '#8173ff'
+                })
+                setEmail('');
+                return;
+            }
+
+            if(status == false){
+                setErrorMessage(message);
+                return;
+            }
+        }
+        catch (err: any) {
+            setErrorMessage(err?.message || "Erro ao enviar email!");
+        }
+        finally {
+            setIsLoading(false);
+        }
     }
-    
+
     return (
         <main className="h-screen flex flex-col">
             <div className="bg-[#8173FF] h-[28%] w-full"></div>
@@ -39,10 +71,19 @@ export default function ResetPassword(){
                         <div className='flex flex-col  items-center justify-center gap-5 w-full xl:w-[55%]'>
                             <div className="flex items-center gap-3 bg-white rounded-[10px] border border-gray-300 w-full focus-within:border-[#8173FF] transition-all duration-200 px-2 py-2">
                                 <EnvelopeIcon className="h-8 w-8 text-[#a9b1bf]" />
-                                <input type="text" onChange={(e)=>{setEmail(e.target.value)}} value={email} placeholder="E-mail" className="outline-none text-[20px] text-gray-700 placeholder-[#a9b1bf]"/>
+                                <input type="text" onChange={(e) => { setEmail(e.target.value) }} value={email} placeholder="E-mail" className="outline-none text-[20px] text-gray-700 placeholder-[#a9b1bf]" />
                             </div>
-                            <button onClick={handleSubmit} className='py-2 px-1 text-white bg-[#8173FF] text-2xl rounded-[10px] w-full cursor-pointer transition-all duration-200 hover:bg-[#685ae6]'>
-                                Enviar link de recuperação
+                            <button onClick={handleSubmit} disabled={isLoading}
+                                className={`
+                                py-2 px-1 text-white bg-[#8173FF] text-2xl rounded-[10px] w-full 
+                                ${isLoading ? 'bg-[#a99fff]' : 'cursor-pointer hover:bg-[#685ae6]'} transition-all duration-200 `}>
+                                {isLoading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    </div>
+                                ) : (
+                                    "Enviar link de recuperação"
+                                )}
                             </button>
                             <Link href="/login" className='mt-2 w-full text-center cursor-pointer underline text-[#8173FF] transition-all duration-200 hover:opacity-60'>
                                 Fazer login
@@ -57,4 +98,3 @@ export default function ResetPassword(){
         </main>
     )
 }
-

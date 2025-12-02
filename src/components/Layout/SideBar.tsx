@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { HomeIcon, BuildingOfficeIcon, BuildingStorefrontIcon, MapPinIcon, UserGroupIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 
-export default function Sidebar({ open }: { open: boolean }) {
+export default function Sidebar({ open, permission }: { open: boolean, permission: 'default' | 'admin', }) {
 
   const pathname = usePathname();
   const [alignClass, setAlignClass] = useState<string>('justify-start')
@@ -51,26 +51,30 @@ export default function Sidebar({ open }: { open: boolean }) {
             ))
           }
           )}
-          <div className='flex flex-col justify-center items-center text-[#6E6E6E] mt-4'>
-            <span className='' >Administração</span>
-            <hr className='w-full text-gray-300' />
-          </div>
-          {itemsAdm.map((item) => {
-            var url = pathname == '/' ? '/home' : pathname;
-            const active = url === item.url;
-            return ((
-              <div key={item.url} className={`
+          {permission == 'admin' ?
+            (<>
+              <div className='flex flex-col justify-center items-center text-[#6E6E6E] mt-4'>
+                <span className='' >Administração</span>
+                <hr className='w-full text-gray-300' />
+              </div>
+              {itemsAdm.map((item) => {
+                var url = pathname == '/' ? '/home' : pathname;
+                const active = url === item.url;
+                return ((
+                  <div key={item.url} className={`
                 flex items-center px-2 py-1 text-[22px] rounded-[10px] cursor-pointer transition-all duration-200
                 ${active ? "bg-[#8173FF] text-white" : "text-[#6E6E6E] hover:bg-[#8173FF] hover:text-white"}
               `}>
-                <Link href={item.url} className='flex gap-2'>
-                  <item.icon width={28} className="relative bottom-[3px]" />
-                  <span className='relative top-[3px]' >{item.name}</span>
-                </Link>
-              </div>
-            ))
-          }
-          )}
+                    <Link href={item.url} className='flex gap-2'>
+                      <item.icon width={28} className="relative bottom-[3px]" />
+                      <span className='relative top-[3px]' >{item.name}</span>
+                    </Link>
+                  </div>
+                ))
+              }
+              )}
+            </>)
+            : (<></>)}
         </div>
       </motion.aside>
 
@@ -158,66 +162,70 @@ export default function Sidebar({ open }: { open: boolean }) {
               ))
             }
             )}
-            <div className='flex flex-col justify-center items-center text-[#6E6E6E] mt-4'>
-              <AnimatePresence mode="wait">
-                {open ? (
-                  <motion.span
-                    key="admin"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    Administração
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="adm"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.1 }}
-                  >
-                    Adm
-                  </motion.span>
-                )}
-              </AnimatePresence>
-              <hr className='w-full text-gray-300' />
-            </div>
-            {itemsAdm.map((item) => {
-              var url = pathname == '/' ? '/home' : pathname;
-              const active = url === item.url;
-              return ((
-                <Link
-                  href={item.url}
-                  key={item.url}
-                  className={`
+            {permission == 'admin' ?
+              (<>
+                <div className='flex flex-col justify-center items-center text-[#6E6E6E] mt-4'>
+                  <AnimatePresence mode="wait">
+                    {open ? (
+                      <motion.span
+                        key="admin"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.1 }}
+                      >
+                        Administração
+                      </motion.span>
+                    ) : (
+                      <motion.span
+                        key="adm"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.1 }}
+                      >
+                        Adm
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <hr className='w-full text-gray-300' />
+                </div>
+                {itemsAdm.map((item) => {
+                  var url = pathname == '/' ? '/home' : pathname;
+                  const active = url === item.url;
+                  return ((
+                    <Link
+                      href={item.url}
+                      key={item.url}
+                      className={`
                     flex items-center px-2 h-11 text-[22px] rounded-[10px] cursor-pointer 
                     transition-all duration-200 w-full gap-2 
                     ${alignClass}
                     ${active ? "bg-[#8173FF] text-white" : "text-[#6E6E6E] hover:bg-[#8173FF] hover:text-white"}
                   `}
-                >
-                  <item.icon width={28} className="shrink-0" />
+                    >
+                      <item.icon width={28} className="shrink-0" />
 
-                  <AnimatePresence mode="wait">
-                    {open ? (
-                      <motion.span
-                        key="full"
-                        className="overflow-hidden inline-block"
-                        initial={{ width: 0 }}
-                        animate={{ width: "auto" }}
-                        exit={{ width: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {item.name}
-                      </motion.span>
-                    ) : null}
-                  </AnimatePresence>
-                </Link>
-              ))
-            }
-            )}
+                      <AnimatePresence mode="wait">
+                        {open ? (
+                          <motion.span
+                            key="full"
+                            className="overflow-hidden inline-block"
+                            initial={{ width: 0 }}
+                            animate={{ width: "auto" }}
+                            exit={{ width: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {item.name}
+                          </motion.span>
+                        ) : null}
+                      </AnimatePresence>
+                    </Link>
+                  ))
+                }
+                )}
+              </>)
+              : (<></>)}
           </div>
         </div>
       </motion.aside>

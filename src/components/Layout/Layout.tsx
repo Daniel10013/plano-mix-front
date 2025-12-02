@@ -6,8 +6,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Layout({
+  permission,
   children,
 }: {
+  permission: 'default' | 'admin',
   children: React.ReactNode;
 }) {
 
@@ -16,7 +18,7 @@ export default function Layout({
   return (
     <>
       <main className='xl:flex'>
-        <Sidebar open={open} />
+        <Sidebar open={open} permission={permission} />
         <section className='flex flex-col xl:flex-1'>
           <Topbar menuOpen={open} setMenuOpen={setOpen} />
           <AnimatePresence>

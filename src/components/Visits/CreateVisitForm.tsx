@@ -3,12 +3,14 @@
 import Select from "react-select";
 import { Save } from "lucide-react";
 import { useState, useEffect } from "react";
+import ModalAddStoreVisit from "./Modal/ModalAddStoreVisit";
 import type { ShoppingStores } from "@/src/types/Stores/Stores";
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 export default function CreateVisitForm() {
 
     const [searchInput, setSearchInput] = useState<string>('');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selectedFilter, setSelectedFilter] = useState<'active' | 'deleted' | 'all'>('active');
     const [selectedShopping, setSelectedShopping] = useState<number>();
     const [shoppingStores, setShoppingStores] = useState<ShoppingStores[]>([
@@ -132,8 +134,13 @@ export default function CreateVisitForm() {
         label: item.name
     }));
 
+    const loadStores = () => {
+
+    }
+
     return (
         <>
+            <ModalAddStoreVisit  reloadStores={loadStores} isOpen={isOpen} onClose={()=>{setIsOpen(false)}} />
             <h1 className="mt-4 w-full text-center xl:text-left text-3xl">Selecione o Shopping:</h1>
             <Select
                 className="w-full text-2xl xl:w-1/4 mb-6"
@@ -167,7 +174,8 @@ export default function CreateVisitForm() {
                             <input type="password" onChange={(e) => { setSearchInput(e.target.value) }} value={searchInput} placeholder="Pesquisar Loja..."
                                 className=" w-[50%] outline-none text-2xl text-gray-700 placeholder-[#a9b1bf]" />
                         </div>
-                        <button className="w-full xl:w-[30%] text-[28px] bg-[#8173FF] text-white flex items-center justify-center gap-2 rounded-[10px]
+                        <button onClick={()=>{setIsOpen(true)}}
+                        className="w-full xl:w-[30%] text-[28px] bg-[#8173FF] text-white flex items-center justify-center gap-2 rounded-[10px]
                             transition-all duration-200 hover:bg-[#5e4fec] cursor-pointer
                         ">
                             Nova Loja <PlusIcon height={26} />

@@ -1,5 +1,7 @@
 import "../styles/globals.css";
 import type { Metadata } from "next";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import { Josefin_Sans } from 'next/font/google';
 
 const josefin = Josefin_Sans({
@@ -21,6 +23,15 @@ export default function RootLayout({
     <html lang="pt-br" className={josefin.className}>
       <body>
         {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
       </body>
     </html>
   );
