@@ -49,7 +49,7 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards }: {
                 <div className="h-full flex items-start">
                     <MapPinIcon height={28} width={28} />
                 </div>
-                <p className="text-[18px]">{shoppingObj.address}, {shoppingObj.cep}</p>
+                <p className="text-[18px]">{shoppingObj.address}</p>
             </div>
             <div>
                 {!isHome ? (

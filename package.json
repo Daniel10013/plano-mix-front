@@ -28,7 +28,8 @@
     "react-toastify": "^11.0.5",
     "sweetalert2": "^11.26.3",
     "tailwind-group-variant": "^1.0.0",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

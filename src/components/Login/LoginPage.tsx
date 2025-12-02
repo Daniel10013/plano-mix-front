@@ -41,7 +41,7 @@ export default function LoginPage() {
             setIsLoading(true);
             setErrorMessage("");
 
-            const { status, message} = await auth(email, password); // sua request aqui
+            const { status, message } = await auth(email, password);
             if(status == false){
                 setErrorMessage(message);
                 return;
