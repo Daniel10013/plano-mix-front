@@ -13,6 +13,9 @@ export type ShoppingRequest = {
     zip_number: number
 }
 
+export type ShoppingUpdate = ShoppingCreate;
+export type ShoppingCreate = Omit<ShoppingRequest, 'id'>
+
 export type ViaCepResponse = {
     cep: string,
     complemento: string,

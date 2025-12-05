@@ -25,3 +25,24 @@
     transform: translateX(100%);
   }
 }
+
+.skeleton-small {
+  background: 
+    linear-gradient(
+      90deg,
+      #e9e9e9a2 0%,
+      #d9d9d9d2 50%,
+      #e9e9e9a2 100%
+    );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 2s infinite linear;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

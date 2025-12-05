@@ -25,8 +25,8 @@ export default function RootLayout({
         {children}
         <ToastContainer
           position="top-right"
-          autoClose={2000}
-          hideProgressBar={true}
+          autoClose={2500}
+          hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
           pauseOnHover

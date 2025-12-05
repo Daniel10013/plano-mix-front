@@ -72,6 +72,7 @@ export default function ShoppingStores({ id }: { id: number }) {
                         }),
 
                     }}
+                    isSearchable={false}
                     noOptionsMessage={() => "Nenhum item encontrado!"}
                     placeholder="Classificação"
                     options={optionsStatus}

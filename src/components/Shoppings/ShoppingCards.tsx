@@ -1,21 +1,63 @@
 'use client';
 
 import Link from "next/link";
+import Swal from "sweetalert2";
 import type { Shopping } from "@/src/types/Shoppings/Shoppings";
+import { deleteShopping } from "@/src/services/shopping.service";
 import { BuildingOfficeIcon, MapPinIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 
-export default function ShoppingCard({ shoppingObj, isHome, reloadCards }: {
-    shoppingObj: Shopping, isHome: boolean, reloadCards?: () => void
+export default function ShoppingCard({ shoppingObj, isHome, reloadCards, setIdToEdit, setModalEditOpen }: {
+    shoppingObj: Shopping, isHome: boolean, reloadCards?: () => void, setIdToEdit?: (id: number) => void, setModalEditOpen?: (state: boolean) => void
 }) {
 
     const handleEdit = async (id: number) => {
-        console.log('Editar id: ' + id)
+        setModalEditOpen!(true);
+        setIdToEdit!(id);
     }
 
-    const handleDelete = async (id: number) => {
-        console.log('Apagar id: ' + id)
-    }
+    const handleDelete = async (id: number, name: string) => {
+        Swal.fire({
+            title: "Atenção!",
+            html: `Deseja apagar o shopping: ${name}?<br>Todos os dados ligados a ele <b>serão perdidos!</b>`,
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Não",
+            confirmButtonText: "Sim",
+            confirmButtonColor: "#de463e",
+            showLoaderOnConfirm: true,
+
+            preConfirm: async () => {
+                try {
+                    const res = await deleteShopping(id);
+
+                    if (!res.status) {
+                        throw new Error(res.message || "Não foi possível apagar.");
+                    }
+
+                    return res;
+                } catch (err: any) {
+                    return Swal.showValidationMessage(
+                        err.message ?? "Erro inesperado ao apagar."
+                    );
+                }
+            },
+
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Sucesso!",
+                    text: "Shopping apagado com sucesso!",
+                    icon: "success",
+                    confirmButtonText: "Entendido!"
+                }).then(() => {
+                    reloadCards?.();
+                });
+            }
+        });
+    };
+
 
     return (
         <Link href={'/shoppings/' + shoppingObj.id}
@@ -37,7 +79,7 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards }: {
                                 onClick={(e) => { e.preventDefault(); handleEdit(shoppingObj.id) }}
                             />
                             <TrashIcon width={30} className="text-red-500 transition-all duration-200 cursor-pointer hover:text-red-800"
-                                onClick={(e) => { e.preventDefault(); handleDelete(shoppingObj.id) }}
+                                onClick={(e) => { e.preventDefault(); handleDelete(shoppingObj.id, shoppingObj.name) }}
                             />
                         </div>
                     </>) : (<></>)}
@@ -70,8 +112,8 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards }: {
                                 hover:bg-red-500 hover:text-white
                             ">
                                 Apagar
-                                <TrashIcon width={30} 
-                                    onClick={(e) => { e.preventDefault(); handleDelete(shoppingObj.id) }}
+                                <TrashIcon width={30}
+                                    onClick={(e) => { e.preventDefault(); handleDelete(shoppingObj.id, shoppingObj.name) }}
                                 />
                             </span>
                         </div>

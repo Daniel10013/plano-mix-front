@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { debounce } from "@/src/lib/utils";
 import { SearchIcon, PlusIcon } from "lucide-react"
 import { useEffect, useState, useMemo } from "react";
+import ModalEditShopping from "./Modal/ModalEditShopping";
 import ModalCreateShopping from "./Modal/ModalCreateShopping";
 import type { Shopping } from "@/src/types/Shoppings/Shoppings";
 import { loadShoppings } from "@/src/services/shopping.service";
@@ -13,6 +14,8 @@ export default function ShoppingPage() {
 
     const [searchInput, setSearchInput] = useState<string>('');
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [modalEditIsOpen, setModaleEditIsOpen] = useState<boolean>(false);
+    const [idToEdit, setIdToEdit] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [shoppings, setShoppings] = useState<Shopping[]>([])
     const [originalShoppings, setOriginalShoppings] = useState<Shopping[]>([])
@@ -71,10 +74,13 @@ export default function ShoppingPage() {
         debouncedFilter(value);
     };
 
-
     return (
         <>
-            <ModalCreateShopping isOpen={modalIsOpen} onClose={() => { setModalIsOpen(false) }} />
+            <ModalEditShopping isOpen={modalEditIsOpen} 
+                onClose={() => { setModaleEditIsOpen(false) }} reloadShoppings={()=> {reloadShoppings()}} 
+                idToEdit={idToEdit}
+            />
+            <ModalCreateShopping isOpen={modalIsOpen} onClose={() => { setModalIsOpen(false) }} reloadShoppings={()=> {reloadShoppings()}} />
             <div className="w-full py-3 px-4 mt-14 xl:mt-1 flex flex-col gap-5">
                 <h1 className="w-full text-center text-4xl xl:text-left">Shoppings Cadastrados</h1>
                 <div className="flex gap-1 justify-between">
@@ -119,6 +125,8 @@ export default function ShoppingPage() {
                                                     shoppingObj={s}
                                                     key={s.id}
                                                     isHome={false}
+                                                    setIdToEdit={setIdToEdit}
+                                                    setModalEditOpen={setModaleEditIsOpen}
                                                     reloadCards={reloadShoppings}
                                                 />
                                             ))}
