@@ -8,7 +8,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         redirect("/shoppings");
     }
 
-
     return (
         <>
             <Details shoppingId={numberId} />

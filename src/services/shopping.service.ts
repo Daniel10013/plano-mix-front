@@ -1,5 +1,6 @@
 import axios from "axios";
 import api from "../lib/api";
+import { ShoppingStores } from "../types/Stores/Stores";
 import type { ShoppingRequest, Shopping, ViaCepResponse, ShoppingCreate, ShoppingUpdate } from "../types/Shoppings/Shoppings";
 
 export async function loadShoppings() {
@@ -34,35 +35,39 @@ async function formatShoppings(data: ShoppingRequest[]): Promise<Shopping[]> {
     );
 }
 
-async function getAddress(cep: number, number: number): Promise<string> {
+export async function getAddress(cep: number, number: number, includeCep: boolean = true): Promise<string> {
     const viacep = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
     const data: ViaCepResponse = viacep.data as ViaCepResponse;
-    const address = `${data.logradouro}, ${number} - ${data.bairro}, ${data.localidade} - ${data.uf}, ${data.cep}`
-    if(address.includes('undefined')){
+    let address = `${data.logradouro}, ${number} - ${data.bairro}, ${data.localidade} - ${data.uf}, ${data.cep}`
+    if (address.includes('undefined')) {
         return cep + ', ' + number;
+    }
+
+    if (includeCep == false) {
+        return `${data.logradouro}, ${number} - ${data.bairro}, ${data.localidade} - ${data.uf}`
     }
     return address;
 }
 
-export async function cepIsValid (cep: string): Promise<boolean> {
+export async function cepIsValid(cep: string): Promise<boolean> {
     try {
         const viacep = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-        if(viacep.status == 400){
+        if (viacep.status == 400) {
             return false
-        }   
+        }
         return true;
-    }catch(err ) {
+    } catch (err) {
         return false;
     }
 }
 
 export async function createShopping(shoppingData: ShoppingCreate) {
-    try { 
+    try {
         const response = await api.post('shopping', shoppingData);
-        const data = response.data as {success: boolean, message: string};
+        const data = response.data as { success: boolean, message: string };
         return {
             status: data.success,
-            message: data.message 
+            message: data.message
         }
     }
     catch (err: any) {
@@ -74,12 +79,12 @@ export async function createShopping(shoppingData: ShoppingCreate) {
 }
 
 export async function deleteShopping(id: number) {
-    try { 
+    try {
         const response = await api.delete('shopping/' + id);
-        const data = response.data as {success: boolean, message: string};
+        const data = response.data as { success: boolean, message: string };
         return {
             status: data.success,
-            message: data.message 
+            message: data.message
         }
     }
     catch (err: any) {
@@ -91,12 +96,12 @@ export async function deleteShopping(id: number) {
 }
 
 export async function updateShopping(id: number, shoppingData: ShoppingUpdate) {
-    try { 
+    try {
         const response = await api.put('shopping/' + id, shoppingData);
-        const data = response.data as {success: boolean, message: string};
+        const data = response.data as { success: boolean, message: string };
         return {
             status: data.success,
-            message: data.message 
+            message: data.message
         }
     }
     catch (err: any) {
@@ -107,13 +112,65 @@ export async function updateShopping(id: number, shoppingData: ShoppingUpdate) {
     }
 }
 
-export async function getById(id: number) {
-    try { 
+export async function getById(id: number, format: boolean = false) {
+    try {
         const response = await api.get('shopping/' + id);
-        console.log(response.data);
         return response.data as ShoppingRequest;
     }
     catch (err: any) {
-        throw new Error(err.response?.data.message ?? 'Erro ao pegar dados do shopping!');
+
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar dados do shopping!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
+    }
+}
+
+export function formatCep(value: string): string {
+    const onlyNumbers = value.replace(/\D/g, "");
+    const trimmed = onlyNumbers.slice(0, 8);
+    if (trimmed.length > 5) {
+        return trimmed.replace(/(\d{5})(\d{1,3})/, "$1-$2");
+    }
+
+    return trimmed;
+}
+
+export async function getShoppingStores(id: number) {
+    try {
+        const response = await api.get(`/store/shopping/${id}`);
+        const responseData = response.data as {
+            status: boolean,
+            data: {
+                store_id: number;
+                store_name: string;
+                store_classification: string;
+                store_segment: string;
+                store_activity: string | null;
+                store_status: 'active' | 'deleted';
+            }[]
+        };
+        const stores: ShoppingStores[] = responseData.data.map((s: any) => ({
+            id: s.store_id,
+            name: s.store_name,
+            classification: s.store_classification,
+            segment: s.store_segment,
+            activity: s.store_activity ?? undefined,
+            status: s.store_status,
+        }));
+
+        return { status:  responseData.status, data: stores };
+    }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar lojas do shopping!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
     }
 }
