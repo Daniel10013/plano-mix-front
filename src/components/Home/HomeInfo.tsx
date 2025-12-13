@@ -2,19 +2,32 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HomeStats } from "@/src/types/Home/Home";
 import { BuildingOfficeIcon, BuildingStorefrontIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { getStats as getHomeStats} from "@/src/services/user.service";
 
 export default function HomeInfo() {
 
-    const [username, setUsername] = useState<string>('Daniel');
-    const [statistics, setStatistics] = useState<HomeStats>({
-        shoppings: 10,
-        stores: 10,
-        shopping_stores: 10,
-        visits: 10
-    })
+    const [username, setUsername] = useState<string>('');
+    const [statistics, setStatistics] = useState<HomeStats>()
+
+    useEffect(() =>{
+        const username = getUsername();
+        setUsername(username)
+        const fetchData = async () => {
+            const stats = await getHomeStats();
+            setStatistics(stats);
+
+        }
+        fetchData();
+        
+    }, [])
+
+    const getUsername = () =>{
+        const data = localStorage.getItem("user_name");
+        return data ?? ""
+    }
 
     return (
         <div className="py-3 px-4 w-full flex flex-col gap-4 mt-14 xl:mt-1 xl:flex-row">
@@ -45,25 +58,25 @@ export default function HomeInfo() {
                     <div className="flex items-center flex-col gap-2 w-full xl:w-1/4">
                         <h2 className="text-[22px] w-1/2 xl:w-full text-center">Número de Shoppings:</h2>
                         <div className="w-[35%] xl:w-[70%] rounded-2xl h-[100px] text-4xl bg-[#8173FF] text-white flex items-center justify-center">
-                            {statistics.shoppings}
+                            {statistics?.shopping_quantity}
                         </div>
                     </div>
                     <div className="flex items-center flex-col gap-2 w-full xl:w-1/4">
                         <h2 className="text-[22px] w-1/2 xl:w-[60%]  text-center">Número de Lojas:</h2>
                         <div className="w-[35%] xl:w-[70%] rounded-2xl h-[100px] text-4xl bg-[#8173FF] text-white flex items-center justify-center">
-                            {statistics.stores}
+                            {statistics?.store_quantity}
                         </div>
                     </div>
                     <div className="flex items-center flex-col gap-2 w-full xl:w-1/4">
                         <h2 className="text-[22px] w-1/2 xl:w-full  text-center">Total Lojas Shoppings:</h2>
                         <div className="w-[35%] xl:w-[70%] rounded-2xl h-[100px] text-4xl bg-[#8173FF] text-white flex items-center justify-center">
-                            {statistics.shopping_stores}
+                            {statistics?.shopping_store_total}
                         </div>
                     </div>
                     <div className="flex items-center flex-col gap-2 w-full xl:w-1/4">
                         <h2 className="text-[22px] w-1/2 xl:w-[60%] text-center">Visitas Recentes:</h2>
                         <div className="w-[35%] xl:w-[70%] rounded-2xl h-[100px] text-4xl bg-[#8173FF] text-white flex items-center justify-center">
-                            {statistics.shoppings}
+                            {statistics?.recent_visits}
                         </div>
                     </div>
                 </div>

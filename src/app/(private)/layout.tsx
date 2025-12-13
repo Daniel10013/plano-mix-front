@@ -18,13 +18,14 @@ export default async function PrivateLayout({ children }: { children: React.Reac
   const pathName = (await headers()).get('x-pathname');
   const tokenValue = jwtDecode(token.value) as JwtPayload;
   const userAccess = tokenValue.type;
+  const userName = tokenValue.name;
 
   if(privateRoutes.includes(pathName ?? '') && userAccess != 'admin'){
     redirect('/home')
   }
 
   return (
-    <Layout permission={userAccess}>
+    <Layout permission={userAccess} userName={userName}>
       {children}
     </Layout>
   );

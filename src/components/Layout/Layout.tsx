@@ -2,18 +2,26 @@
 
 import Topbar from './TopBar';
 import Sidebar from './SideBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Layout({
   permission,
+  userName,
   children,
 }: {
   permission: 'default' | 'admin',
+  userName: string,
   children: React.ReactNode;
 }) {
 
   const [open, setOpen] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (userName) {
+      localStorage.setItem("user_name", userName);
+    }
+  }, [userName]);
 
   return (
     <>

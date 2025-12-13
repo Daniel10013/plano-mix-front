@@ -1,6 +1,6 @@
 export type HomeStats = {
-    shoppings: number,
-    stores: number,
-    shopping_stores: number,
-    visits: number
+        shopping_quantity: number,
+        store_quantity: number,
+        shopping_store_total: number,
+        recent_visits: number
 }

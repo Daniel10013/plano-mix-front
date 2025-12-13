@@ -1,42 +1,22 @@
 'use client';
 
 import Link from "next/link"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Shopping } from "@/src/types/Shoppings/Shoppings";
 import ShoppingCard from "../Shoppings/ShoppingCards";
+import { loadShoppings } from "@/src/services/shopping.service";
 
 export default function HomeShoppings() {
 
-    const [shoppings, setShoppings] = useState<Shopping[]>([
-        {
-            id: 1,
-            name: 'Via Shopping',
-            description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            address: 'Av. Afonso Vaz de Melo, 640 - Barreiro, Belo Horizonte - MG',
-            cep: '30640-070'
-        },
-        {
-            id: 2,
-            name: 'Via Shopping',
-            description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            address: 'Av. Afonso Vaz de Melo, 640 - Barreiro, Belo Horizonte - MG',
-            cep: '30640-070'
-        },
-        {
-            id: 3,
-            name: 'Via Shopping',
-            description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            address: 'Av. Afonso Vaz de Melo, 640 - Barreiro, Belo Horizonte - MG',
-            cep: '30640-070'
-        },
-        {
-            id: 4,
-            name: 'Via Shopping',
-            description: 'Shopping da região do barreiro, com grande area de gastronomia, possui diversas lojas legais para um passeio em familia!',
-            address: 'Av. Afonso Vaz de Melo, 640 - Barreiro, Belo Horizonte - MG',
-            cep: '30640-070'
+    const [shoppings, setShoppings] = useState<Shopping[]>([])
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            const shopping = await loadShoppings() as Shopping[];
+            setShoppings(shopping);
         }
-    ])
+        fetchData();
+    }, [])
 
     return (
         <div className="py-10 flex flex-col px-4 w-full bg-[#F8F8F8] gap-5">
@@ -56,7 +36,7 @@ export default function HomeShoppings() {
                     (
                         <>
                         {
-                            shoppings.map((s) => (
+                            shoppings.slice(0,4).map((s) => (
                                 <ShoppingCard shoppingObj={s} key={s.id} isHome={true}  />
                             ))
                         }
