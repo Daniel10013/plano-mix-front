@@ -17,3 +17,7 @@ export function capitalizeWords(text: string): string {
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString('pt-BR');
+}
