@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Visit } from "@/src/types/Visits/Visits";
 import { MapPinIcon } from "@heroicons/react/24/outline";
+import { formatDate } from "@/src/lib/utils";
 
 export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHome: boolean }) {
     const showDetails = (id: number) =>{
@@ -25,11 +26,11 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHo
                                 <h1 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap">{visitObj.shopping_name}</h1>
                             </div>
                             <div className="h-full flex items-center justify-center">
-                                {visitObj.date}
+                                {formatDate(visitObj.date)}
                             </div>
                         </div>
                         <div className="w-full overflow-hidden text-ellipsis whitespace h-[150px] xl:h-[120px]">
-                            <p className="text-[20px]">{visitObj.description}</p>
+                            <p className="text-[20px]">{visitObj.observation}</p>
                         </div>
                     </Link>
                 )
@@ -52,7 +53,7 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHo
                             </div>
                         </div>
                         <div className="w-full overflow-hidden text-ellipsis whitespace h-[150px] xl:h-[120px]">
-                            <p className="text-[20px]">{visitObj.description}</p>
+                            <p className="text-[20px]">{visitObj.observation}</p>
                         </div>
                     </div>
                 )
