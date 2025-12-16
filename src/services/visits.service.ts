@@ -16,7 +16,7 @@ export async function getVisitsByShopping(shoppingId: number) {
     }
 }
 
-<<<<<<< HEAD
+
 interface ApiVisitResponse {
     status: boolean;
     data: {
@@ -45,7 +45,14 @@ export async function getRecentVisits(): Promise<Visit[]> {
         return formattedData;
 
     } catch (err: any) {
-=======
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar visitas do shopping!';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
 export async function getVisitDetails(visitId: number) {
     try {
         const response = await api.get(`/visit/details/${visitId}`);
@@ -56,16 +63,12 @@ export async function getVisitDetails(visitId: number) {
         };
     }
     catch (err: any) {
->>>>>>> fbefaad3c851aa93d8efd87be830ede98a94c335
         const status = err.response?.status ?? 500;
         const message = err.response?.data?.message ?? 'Erro ao pegar visitas do shopping!';
         const customError = new Error(message) as Error & { status?: number };
         customError.status = status;
         throw customError;
     }
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> fbefaad3c851aa93d8efd87be830ede98a94c335
+
