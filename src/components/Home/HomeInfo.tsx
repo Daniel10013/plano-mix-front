@@ -62,7 +62,7 @@ export default function HomeInfo() {
                         </div>
                     </div>
                     <div className="flex items-center flex-col gap-2 w-full xl:w-1/4">
-                        <h2 className="text-[22px] w-1/2 xl:w-[60%]  text-center">Número de Lojas:</h2>
+                        <h2 className="text-[22px] w-1/2 xl:w-full text-center">Quantidade de Lojas:</h2>
                         <div className="w-[35%] xl:w-[70%] rounded-2xl h-[100px] text-4xl bg-[#8173FF] text-white flex items-center justify-center">
                             {statistics?.store_quantity}
                         </div>
