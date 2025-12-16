@@ -1,9 +1,12 @@
 export type Store = {
-    id: number,
+    id: number
     name: string,
+    Classification_id: number,
     classification: string,
+    segment_id: number,
     segment: string,
-    activity: string  | null,
+    activity_id?: number,
+    activity?: string
 }
 
 export type ShoppingStores = {

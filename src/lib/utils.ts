@@ -1,12 +1,19 @@
-export function debounce<Func extends (...args: any[]) => void>(func: Func, delay: number) {
-  let timeoutId: ReturnType<typeof setTimeout>;
+export function debounce<T extends (...args: any[]) => void>(
+    fn: T,
+    delay: number
+) {
+    let timer: ReturnType<typeof setTimeout>;
 
-  return (...args: Parameters<Func>) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
+    const debounced = (...args: Parameters<T>) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+
+    debounced.cancel = () => {
+        clearTimeout(timer);
+    };
+
+    return debounced as T & { cancel: () => void };
 }
 
 export function capitalizeWords(text: string): string {

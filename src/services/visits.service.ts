@@ -1,5 +1,5 @@
 import api from "../lib/api";
-import { Visit } from "../types/Visits/Visits";
+import { Visit, VisitDetails } from "../types/Visits/Visits";
 
 export async function getVisitsByShopping(shoppingId: number) {
     try {
@@ -16,6 +16,7 @@ export async function getVisitsByShopping(shoppingId: number) {
     }
 }
 
+<<<<<<< HEAD
 interface ApiVisitResponse {
     status: boolean;
     data: {
@@ -44,11 +45,27 @@ export async function getRecentVisits(): Promise<Visit[]> {
         return formattedData;
 
     } catch (err: any) {
+=======
+export async function getVisitDetails(visitId: number) {
+    try {
+        const response = await api.get(`/visit/details/${visitId}`);
+        const responseData = response.data as {success: boolean, data: VisitDetails};
+        return {
+            status: responseData.success,
+            data: responseData.data 
+        };
+    }
+    catch (err: any) {
+>>>>>>> fbefaad3c851aa93d8efd87be830ede98a94c335
         const status = err.response?.status ?? 500;
         const message = err.response?.data?.message ?? 'Erro ao pegar visitas do shopping!';
         const customError = new Error(message) as Error & { status?: number };
         customError.status = status;
         throw customError;
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> fbefaad3c851aa93d8efd87be830ede98a94c335

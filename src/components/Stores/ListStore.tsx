@@ -1,127 +1,166 @@
 "use client"
 
-import { SearchIcon } from "lucide-react"
-import { useState } from "react";
 import Select from "react-select";
+import { SearchIcon } from "lucide-react"
+import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline"
 import ModalCreateStore from "./Modal/ModalCreateStore";
 import type { Store } from "@/src/types/Stores/Stores.ts"
 import StoreCard from "@/src/components/Stores/StoreCard";
+import { getAllStores } from "@/src/services/store.service";
+import { capitalizeWords, debounce } from "@/src/lib/utils";
+import { getClassifications, getSegments, getActivities } from "@/src/services/classification.service";
+
+type Classification = { id: number, name: string }
+type Segment = { id: number, name: string, classification_id: number }
+type Activity = { id: number, name: string, segment_id: number }
+
 
 export default function ListStore() {
-    const [searchInput, setSearchInput] = useState<string>('');
+    //dados da pagina
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [searchLoading, setSearchIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [stores, setStores] = useState<Store[]>(
-        [{
-            id: 1,
-            name: "Burguer King",
-            classification: "Ancora",
-            segment: "Alimentação",
-            activity: "Fast-Food"
-        },
-        {
-            id: 2,
-            name: "Burguer King",
-            classification: "Ancora",
-            segment: "Alimentação",
-            activity: "Fast-Food"
-        },
-        {
-            id: 3,
-            name: "Burguer King",
-            classification: "Ancora",
-            segment: "Alimentação",
-            activity: "Fast-Food"
-        },
-        {
-            id: 4,
-            name: "Burguer King",
-            classification: "Ancora",
-            segment: "Alimentação",
-            activity: "Fast-Food"
-        },
-        {
-            id: 5,
-            name: "Burguer King",
-            classification: "Ancora",
-            segment: "Alimentação",
-            activity: "Fast-Food"
-    },])
 
+    //dados carregados
+    const [stores, setStores] = useState<Store[]>([]);
+    const [allStores, setAllStores] = useState<Store[]>([]);
+    const [classifications, setClassifications] = useState<Classification[]>([]);
+    const [segments, setSegments] = useState<Segment[]>([]);
+    const [activities, setActivities] = useState<Activity[]>([]);
 
-    const classification = [
-        { "id": 1, "name": "LOJAS ÂNCORA" },
-        { "id": 2, "name": "SEMI-ÂNCORA" },
-        { "id": 3, "name": "MEGALOJAS" },
-        { "id": 4, "name": "LOJAS SATÉLITE" },
-        { "id": 5, "name": "CONVENIÊNCIA / SERVIÇOS" },
-        { "id": 6, "name": "ENTRETENIMENTO" },
-        { "id": 7, "name": "MALL E MERCHANDISING" }
-    ]
-    
-    const optionsClassification = classification.map(item => ({
-        value: item.id,
-        label: item.name
-    }));
+    // dados de filtro
+    const [searchInput, setSearchInput] = useState<string>('');
+    const [selectedClassification, setSelectedClassification] = useState<number>(0);
+    const [selectedSegment, setSelectedSegment] = useState<number>(0);
+    const [optionsClassification, setOptionsClassification] = useState<{ value: number, label: string }[]>([]);
+    const [optionsSegment, setOptionsSegment] = useState<{ value: number, label: string }[]>([]);
 
-    const segment = [
-        { "id": 1, "name": "MODA", "classification_id": 1 },
-        { "id": 2, "name": "HIPERMERCADO / SUPERMERCADO / ATACAREJO", "classification_id": 1 },
-        { "id": 3, "name": "ARTIGOS ESPORTIVOS", "classification_id": 1 },
-        { "id": 4, "name": "CONSTRUÇÃO E DECORAÇÃO", "classification_id": 1 },
-        { "id": 5, "name": "ELETRODOMÉSTICOS E ELETROELETRÔNICOS", "classification_id": 1 },
-        { "id": 6, "name": "MAGAZINES E/OU UTENSÍLIOS PARA O LAR E CONVENIÊNCIA", "classification_id": 1 },
-        { "id": 7, "name": "MATERIAL DE ESCRITÓRIO / PAPELARIA / INFORMÁTICA", "classification_id": 1 },
-        { "id": 8, "name": "BRINQUEDOS", "classification_id": 1 },
-        { "id": 9, "name": "PUERICULTURA", "classification_id": 1 },
-        { "id": 10, "name": "ARTIGOS PARA FESTAS", "classification_id": 1 },
-        { "id": 11, "name": "LIVRARIAS", "classification_id": 1 },
-        { "id": 12, "name": "PET CENTERS", "classification_id": 1 },
-        { "id": 13, "name": "ACADEMIAS", "classification_id": 1 },
-        { "id": 14, "name": "CENTROS MÉDICOS", "classification_id": 1 },
-        { "id": 15, "name": "CENTROS EDUCACIONAIS / ESCOLAS / FACULDADES / UNIVERSIDADES", "classification_id": 1 },
-        { "id": 16, "name": "SERVIÇOS", "classification_id": 1 },
-        { "id": 17, "name": "ALIMENTAÇÃO E BEBIDAS", "classification_id": 1 },
-        { "id": 18, "name": "OUTROS", "classification_id": 1 }
-    ]
+    useEffect(() => {
+        fetchData();
+    }, [])
 
-    const activity = [
-        {id: 1, name: 'Activity 1', segment_id: 1},
-        {id: 2, name: 'Activity 2', segment_id: 1},
-        {id: 3, name: 'Activity 3', segment_id: 1},
-        {id: 4, name: 'Activity 4', segment_id: 1},
-    ]
-    
-    const optionsSegment = segment.map(item => ({
-        value: item.id,
-        label: item.name
-    }));
+    useEffect(() => {
+        setOptionsClassification(
+            classifications.map(c => ({
+                value: c.id,
+                label: capitalizeWords(c.name)
+            }))
+        );
+    }, [classifications]);
 
-    const handleFilterClassification = (id: number) => {
-        console.log(id);
-    }
+    useEffect(() => {
+        setOptionsSegment(
+            segments.map(s => ({
+                value: s.id,
+                label: capitalizeWords(s.name)
+            }))
+        );
+    }, [segments]);
 
-    const handleFilterSegment = (id: number) => {
-        console.log(id);
+    useEffect(() => {
+        if (isLoading) return;
+
+        setSearchIsLoading(true);
+        applyFilterDebounced();
+
+        return () => {
+            applyFilterDebounced.cancel?.();
+        };
+    }, [searchInput, selectedClassification, selectedSegment, isLoading]);
+
+    const fetchData = async () => {
+        try {
+            const data = await getAllStores();
+            setAllStores(data);
+            setStores(data);
+
+            const dataClass = await getClassifications();
+            setClassifications(dataClass.data);
+            console.log(dataClass)
+            const dataSegment = await getSegments();
+            setSegments(dataSegment.data);
+            console.log(dataSegment);
+            const dataActivity = await getActivities();
+            setActivities(dataActivity.data);
+        }
+        catch (err: any) {
+            toast.error(err.message ?? 'Erro ao carregar dados das lojas!');
+        }
+        finally {
+            setIsLoading(false);
+         }
     }
 
     const loadStores = () => {
-
+        fetchData();
     }
+
+    const handleFilterClassification = (id: number) => {
+        setSelectedClassification(id);
+
+        if (id === 0) {
+            setOptionsSegment([]);
+            return;
+        }
+
+        const filteredSegments = segments.filter(
+            s => s.classification_id === id
+        );
+
+        setOptionsSegment(
+            filteredSegments.map(s => ({
+                value: s.id,
+                label: capitalizeWords(s.name)
+            }))
+        );
+    }
+
+    const filterStores = (
+        value: string,
+        classificationId: number,
+        segmentId: number
+    ): Store[] => {
+        const normalized = value.trim().toLowerCase();
+
+        return allStores.filter(store => {
+            const matchName =
+                normalized === '' ||
+                store.name.toLowerCase().includes(normalized);
+
+            const matchClassification =
+                classificationId === 0 ||
+                store.Classification_id === classificationId;
+
+            const matchSegment =
+                classificationId === 0
+                    ? true
+                    : segmentId === 0 || store.segment_id === segmentId;
+
+            return matchName && matchClassification && matchSegment;
+        });
+    };
+
+    const applyFilterDebounced = debounce(() => {
+        const result = filterStores(searchInput, selectedClassification, selectedSegment);
+        setStores(result);
+        setSearchIsLoading(false);
+    }, 500);
 
     return (
         <>
-            <ModalCreateStore 
-                isOpen={isOpen} onClose={()=>{setIsOpen(false)}} 
-                reloadStores={()=>{loadStores()}} classifications={classification} segments={segment} activity={activity}
-                />
+            <ModalCreateStore
+                isOpen={isOpen} onClose={() => { setIsOpen(false) }}
+                reloadStores={() => { loadStores() }} classifications={classifications} segments={segments} activity={activities}
+            />
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex">
                     <span className="w-[80%] flex justify-start">
                         <h1 className="text-3xl">Listagem de lojas</h1>
                     </span>
                     <div className="w-[20%] xl:w-[20%] xl:hidden flex justify-center">
-                        <button onClick={() => { console.log("teste") }} className=" p-2 w-[65%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
+                        <button onClick={() => { setIsOpen(true) }} className=" p-2 w-[65%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
                                                 transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
                             <span className="hidden text-2xl">Adicionar Usuário</span><PlusIcon height={28} />
                         </button>
@@ -149,13 +188,14 @@ export default function ListStore() {
                                         borderColor: state.isFocused ? "#8173FF" : base.borderColor,
                                     },
                                 }),
-                                
+
                             }}
                             noOptionsMessage={() => "Nenhum item encontrado!"}
                             placeholder="Classificação"
                             options={optionsClassification}
-                            onChange={(v) => handleFilterClassification(v!.value)}
+                            onChange={(v) => handleFilterClassification(v ? v.value : 0)}
                             isSearchable
+                            isClearable
                         />
                     </div>
                     <div className="rounded-[10px] w-full xl:w-[30%] flex">
@@ -175,37 +215,60 @@ export default function ListStore() {
                                         borderColor: state.isFocused ? "#8173FF" : base.borderColor,
                                     },
                                 }),
-                                
+
                             }}
                             noOptionsMessage={() => "Nenhum item encontrado!"}
-                            placeholder="Segmento"
+                            placeholder={selectedClassification === 0 ? 'Selecione uma classificação' : 'Segmento'}
                             options={optionsSegment}
-                            onChange={(v) => handleFilterSegment(v!.value)}
+                            onChange={(v) => setSelectedSegment(v ? v.value : 0)}
                             isSearchable
+                            isClearable
+                            isDisabled={selectedClassification === 0}
                         />
                     </div>
                     <div className="hidden w-full xl:w-[20%] xl:flex justify-center">
-                        <button onClick={()=>{setIsOpen(true)}}
-                        className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
+                        <button onClick={() => { setIsOpen(true) }}
+                            className=" p-2 w-[10%] xl:w-full bg-[#8173FF] text-white flex items-center justify-center xl:gap-2 rounded-[10px] 
                             transition-all duration-200 hover:bg-[#4f3fdd] cursor-pointer">
                             <span className="xl:block text-2xl">Cadastrar</span><PlusIcon height={28} />
                         </button>
                     </div>
                 </div>
-                <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                    {stores.length == 0 ?
+                <div className={!searchLoading && !isLoading && stores.length == 0 ? 'w-full flex items-center justify-center' : 'w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4'}>
+                    {isLoading || searchLoading ?
                         (
-                            <div className="w-full flex item-center justify-center p-8">
-                                <h1 className="text-2xl">Nenhuma loja cadastrada! :/</h1>
-                            </div>
+                            <>
+                                {Array.from({ length: 8 }).map(() => {
+                                    return (
+                                        <div className={`h-80 flex gap-4 flex-col border border-transparent p-4 rounded-[10px] bg-white w-full xl:w-full skeleton`}>
+                                        </div>
+                                    );
+                                })
+
+                                }
+                            </>
                         )
                         :
                         (
                             <>
-                                {
-                                    stores.map((v) => (
-                                        <StoreCard storeObj={v} key={v.id} />
-                                    ))
+                                {stores.length == 0 ?
+                                    (
+                                        <>
+                                            <div className="w-1/2 border border-gray-300 rounded-[10px] flex item-center justify-center p-12">
+                                                <h1 className="text-2xl">Nenhuma loja cadastrada! :/</h1>
+                                            </div>
+                                        </>
+                                    )
+                                    :
+                                    (
+                                        <>
+                                            {
+                                                stores.map((v) => (
+                                                    <StoreCard storeObj={v} key={v.id} />
+                                                ))
+                                            }
+                                        </>
+                                    )
                                 }
                             </>
                         )
