@@ -4,17 +4,14 @@ import Select from "react-select";
 import { SearchIcon } from "lucide-react"
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
+import ModalFormStore from "./Modal/ModalFormStore";
 import { PlusIcon } from "@heroicons/react/24/outline"
-import ModalCreateStore from "./Modal/ModalCreateStore";
 import type { Store } from "@/src/types/Stores/Stores.ts"
 import StoreCard from "@/src/components/Stores/StoreCard";
 import { getAllStores } from "@/src/services/store.service";
 import { capitalizeWords, debounce } from "@/src/lib/utils";
+import { Classification, Segment, Activity } from "@/src/types/Classifications/Classification";
 import { getClassifications, getSegments, getActivities } from "@/src/services/classification.service";
-
-type Classification = { id: number, name: string }
-type Segment = { id: number, name: string, classification_id: number }
-type Activity = { id: number, name: string, segment_id: number }
 
 
 export default function ListStore() {
@@ -22,6 +19,7 @@ export default function ListStore() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [searchLoading, setSearchIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [idToEdit, setIdToEdit] = useState<number>(0);
 
     //dados carregados
     const [stores, setStores] = useState<Store[]>([]);
@@ -72,16 +70,15 @@ export default function ListStore() {
 
     const fetchData = async () => {
         try {
+            setIsLoading(true);
             const data = await getAllStores();
             setAllStores(data);
             setStores(data);
 
             const dataClass = await getClassifications();
             setClassifications(dataClass.data);
-            console.log(dataClass)
             const dataSegment = await getSegments();
             setSegments(dataSegment.data);
-            console.log(dataSegment);
             const dataActivity = await getActivities();
             setActivities(dataActivity.data);
         }
@@ -90,17 +87,14 @@ export default function ListStore() {
         }
         finally {
             setIsLoading(false);
-         }
-    }
-
-    const loadStores = () => {
-        fetchData();
+        }
     }
 
     const handleFilterClassification = (id: number) => {
         setSelectedClassification(id);
 
         if (id === 0) {
+            setSelectedSegment(0);
             setOptionsSegment([]);
             return;
         }
@@ -131,12 +125,11 @@ export default function ListStore() {
 
             const matchClassification =
                 classificationId === 0 ||
-                store.Classification_id === classificationId;
+                store.classification_id === classificationId;
 
             const matchSegment =
-                classificationId === 0
-                    ? true
-                    : segmentId === 0 || store.segment_id === segmentId;
+                segmentId === 0 ||
+                store.segment_id === segmentId;
 
             return matchName && matchClassification && matchSegment;
         });
@@ -150,9 +143,9 @@ export default function ListStore() {
 
     return (
         <>
-            <ModalCreateStore
-                isOpen={isOpen} onClose={() => { setIsOpen(false) }}
-                reloadStores={() => { loadStores() }} classifications={classifications} segments={segments} activity={activities}
+            <ModalFormStore
+                isOpen={isOpen} onClose={() => { setIsOpen(false) }} storeId={idToEdit}
+                reloadStores={() => { fetchData() }} classifications={classifications} segments={segments} activity={activities}
             />
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex">
@@ -215,16 +208,25 @@ export default function ListStore() {
                                         borderColor: state.isFocused ? "#8173FF" : base.borderColor,
                                     },
                                 }),
-
                             }}
                             noOptionsMessage={() => "Nenhum item encontrado!"}
-                            placeholder={selectedClassification === 0 ? 'Selecione uma classificação' : 'Segmento'}
+                            placeholder={
+                                selectedClassification === 0
+                                    ? 'Selecione uma classificação'
+                                    : 'Segmento'
+                            }
                             options={optionsSegment}
+                            value={
+                                selectedSegment === 0
+                                    ? null
+                                    : optionsSegment.find(o => o.value === selectedSegment) ?? null
+                            }
                             onChange={(v) => setSelectedSegment(v ? v.value : 0)}
                             isSearchable
                             isClearable
                             isDisabled={selectedClassification === 0}
                         />
+
                     </div>
                     <div className="hidden w-full xl:w-[20%] xl:flex justify-center">
                         <button onClick={() => { setIsOpen(true) }}
@@ -238,9 +240,9 @@ export default function ListStore() {
                     {isLoading || searchLoading ?
                         (
                             <>
-                                {Array.from({ length: 8 }).map(() => {
+                                {Array.from({ length: 8 }).map((_, index) => {
                                     return (
-                                        <div className={`h-80 flex gap-4 flex-col border border-transparent p-4 rounded-[10px] bg-white w-full xl:w-full skeleton`}>
+                                        <div key={index} className={`h-80 flex gap-4 flex-col border border-transparent p-4 rounded-[10px] bg-white w-full xl:w-full skeleton`}>
                                         </div>
                                     );
                                 })
@@ -264,7 +266,7 @@ export default function ListStore() {
                                         <>
                                             {
                                                 stores.map((v) => (
-                                                    <StoreCard storeObj={v} key={v.id} />
+                                                    <StoreCard storeObj={v} key={v.id} reloadCards={fetchData} setIdToEdit={setIdToEdit} openEditModal={setIsOpen} />
                                                 ))
                                             }
                                         </>
