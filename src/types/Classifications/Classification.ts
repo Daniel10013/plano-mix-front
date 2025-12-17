@@ -1,11 +1,3 @@
-export type Mix = {
-    classification_id: number;
-    classification: string;
-    segment_id: number | null;
-    segment: string | null; 
-    activity_id: number | null;
-    activity: string | null;
-};
 
 export type Classification = { id: number, name: string }
 export type Segment = { id: number, name: string, classification_id: number }
