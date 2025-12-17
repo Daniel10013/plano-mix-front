@@ -11,6 +11,7 @@ export default async function PrivateLayout({ children }: { children: React.Reac
 
   const cookieStore = cookies();
   const token = (await cookieStore).get("auth_token");
+  console.log(token);
   
   if (!token) {
     redirect("/login");
@@ -18,6 +19,7 @@ export default async function PrivateLayout({ children }: { children: React.Reac
   
   const pathName = (await headers()).get('x-pathname');
   const tokenValue = jwtDecode(token.value) as JwtPayload;
+  console.log(tokenValue);
   if (tokenValue.exp * 1000 < Date.now())  {
     try {
       await logout();
