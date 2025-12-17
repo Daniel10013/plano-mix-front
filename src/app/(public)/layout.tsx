@@ -46,7 +46,7 @@ export default function PublicLayout({
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/get-me`,
+          `${process.env.NEXT_PUBLIC_API_URL}/users/get-me`,
           {
             credentials: 'include',
             cache: 'no-store',
