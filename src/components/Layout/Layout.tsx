@@ -15,7 +15,7 @@ export default function Layout({
   children: React.ReactNode;
 }) {
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   useEffect(() => {
     if (userName) {

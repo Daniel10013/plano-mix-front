@@ -28,15 +28,14 @@ export default function ShoppingPage() {
         try {
             setIsLoading(true);
             const data = await loadShoppings() as Shopping[];
+            console.log(data);
             setShoppings(data);
             setOriginalShoppings(data);
+            setIsLoading(false);
         }
         catch (err: any) {
             console.log(err);
             toast.error(err.message ?? 'Erro ao listar shoppings!');
-        }
-        finally {
-            setIsLoading(false);
         }
     }
 

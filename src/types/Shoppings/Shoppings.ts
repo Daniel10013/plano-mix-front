@@ -31,3 +31,8 @@ export type ViaCepResponse = {
     unidade: string,
     bairro: string
 }
+
+export type ShoppingFilter = {
+    value: number, 
+    label: string
+}

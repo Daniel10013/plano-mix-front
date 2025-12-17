@@ -12,12 +12,14 @@ export async function sendResetEmail(email: string): Promise<{ status: boolean, 
             message: message
         }
     }
-    catch (error: any) {
-        console.log(error);
-        return {
-            status: false,
-            message: error.response?.data.message ?? 'Erro ao enviar email!'
-        }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao enviar email!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
     }
 }
 
@@ -34,12 +36,14 @@ export async function changePassword(token: string, newPassword: string, confirm
             message: message
         }
     }
-    catch (error: any) {
-        console.log(error);
-        return {
-            status: false,
-            message: error.response?.data.message ?? 'Erro trocar senha!'
-        }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro trocar senha!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
     }
 }
 
@@ -64,7 +68,7 @@ export async function getUserById(id: number): Promise<User> {
 
 export async function getStats(): Promise<HomeStats> {
     const response = await api.get("/users/home/");
-    if(response.status != 200){
+    if (response.status != 200) {
         throw new Error("Erro ao listar Estatisticas");
     }
     const data = response.data as { sucess: boolean, data: HomeStats };

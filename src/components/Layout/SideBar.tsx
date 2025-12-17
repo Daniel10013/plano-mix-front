@@ -83,7 +83,7 @@ export default function Sidebar({ open, permission }: { open: boolean, permissio
       {/* DESKTOP */}
       <motion.aside
         className="hidden xl:flex sticky top-0 self-start xl:w-[15%] h-screen bg-white border-r border-gray-300 z-50 p-4 shadow-lg py-12 px-3 items-center flex-col overflow-hidden"
-        initial={{ width: '15%' }}
+        initial={false}
         animate={{ width: open ? '15%' : '4%' }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         onAnimationStart={() => {

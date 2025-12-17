@@ -195,25 +195,47 @@ export default function ListStore() {
                         <Select
                             className="w-full text-2xl"
                             styles={{
-                                container: (base) => ({ ...base, flex: 1 }),
+                                container: (base) => ({
+                                    ...base,
+                                    flex: 1,
+                                }),
                                 control: (base, state) => ({
                                     ...base,
                                     height: "100%",
-                                    cursor: "pointer",
                                     minHeight: "2.75rem",
+                                    cursor: "pointer",
                                     boxShadow: "none",
                                     borderRadius: "10px",
                                     borderColor: state.isFocused ? "#8173FF" : base.borderColor,
+                                    whiteSpace: "nowrap",
                                     "&:hover": {
                                         borderColor: state.isFocused ? "#8173FF" : base.borderColor,
                                     },
+                                }),
+                                valueContainer: (base) => ({
+                                    ...base,
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                }),
+                                placeholder: (base) => ({
+                                    ...base,
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                 }),
                             }}
                             noOptionsMessage={() => "Nenhum item encontrado!"}
                             placeholder={
                                 selectedClassification === 0
-                                    ? 'Selecione uma classificação'
-                                    : 'Segmento'
+                                    ? "Selecione uma classificação"
+                                    : "Segmento"
                             }
                             options={optionsSegment}
                             value={
@@ -226,6 +248,7 @@ export default function ListStore() {
                             isClearable
                             isDisabled={selectedClassification === 0}
                         />
+
 
                     </div>
                     <div className="hidden w-full xl:w-[20%] xl:flex justify-center">

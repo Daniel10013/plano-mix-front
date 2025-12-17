@@ -1,5 +1,15 @@
 import api from "../lib/api";
 import { Visit, VisitDetails } from "../types/Visits/Visits";
+interface ApiVisitResponse {
+    status: boolean;
+    data: {
+        id: number;
+        observation: string;
+        user: { name: string };
+        shopping: { name: string, id: number};
+        date: string;
+    }[];
+}
 
 export async function getVisitsByShopping(shoppingId: number) {
     try {
@@ -16,29 +26,15 @@ export async function getVisitsByShopping(shoppingId: number) {
     }
 }
 
-
-interface ApiVisitResponse {
-    status: boolean;
-    data: {
-        id: number;
-        observation: string;
-        user: { name: string };
-        shopping: { name: string };
-        date: string;
-    }[];
-}
-
 export async function getRecentVisits(): Promise<Visit[]> {
     try {
-        // Define o tipo da resposta do axios
         const response = await api.get<ApiVisitResponse>("/visit/");
-
-        // Transformação dos dados
         const formattedData: Visit[] = response.data.data.map(item => ({
             id: item.id,
             observation: item.observation,
             username: item.user.name,
             shopping_name: item.shopping.name,
+            shopping_id: item.shopping.id,
             date: item.date
         }));
 
@@ -46,6 +42,7 @@ export async function getRecentVisits(): Promise<Visit[]> {
 
     } catch (err: any) {
         const status = err.response?.status ?? 500;
+        console.log(err);
         const message = err.response?.data?.message ?? 'Erro ao pegar visitas do shopping!';
         const customError = new Error(message) as Error & { status?: number };
         customError.status = status;

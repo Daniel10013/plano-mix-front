@@ -1,9 +1,9 @@
-import HeaderVisit from "@/src/components/Visits/HeaderVisit"
+import VisitPage from "@/src/components/Visits/VisitPage"
 
-export default function VisitPage() {
+export default function PageVisit() {
     return (
         <div>
-            <HeaderVisit />
+            <VisitPage />
         </div>
     )
 }

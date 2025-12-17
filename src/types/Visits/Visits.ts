@@ -1,6 +1,7 @@
 export type Visit = {
     id: number,
     shopping_name: string,
+    shopping_id: number,
     observation: string
     username: string,
     date: string

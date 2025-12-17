@@ -3,9 +3,11 @@ import type { Visit } from "@/src/types/Visits/Visits";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { formatDate } from "@/src/lib/utils";
 
-export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHome: boolean }) {
+export default function VisitsCard({ visitObj, isHome, openDetails }: { visitObj: Visit, isHome: boolean, openDetails?: (id: number) => void }) {
     const showDetails = (id: number) =>{
-        console.log(id);
+        if(isHome == false){
+            openDetails!(id);
+        }
     }
 
     return (
@@ -13,7 +15,7 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHo
 
             {isHome == true ?
                 (
-                    <Link href={'/visit/' + visitObj.id}
+                    <Link href={'/visits?id=' + visitObj.id}
                         className={`
                 flex gap-4 flex-col border border-[#C2C2C2] p-4 rounded-[10px] h-[250px] xl:h-[220] bg-white  
                 w-full xl:w-1/3
@@ -49,7 +51,7 @@ export default function VisitsCard({ visitObj, isHome }: { visitObj: Visit, isHo
                                 <h1 className="text-2xl overflow-hidden text-ellipsis whitespace-nowrap">{visitObj.shopping_name}</h1>
                             </div>
                             <div className="h-full flex items-center justify-center">
-                                {visitObj.date}
+                                {formatDate(visitObj.date)}
                             </div>
                         </div>
                         <div className="w-full overflow-hidden text-ellipsis whitespace h-[150px] xl:h-[120px]">

@@ -9,17 +9,17 @@ import { toast } from "react-toastify";
 
 export default function HomeShoppings() {
 
-    const [shoppings, setShoppings] = useState<Shopping[] | null>(null)
+    const [shoppings, setShoppings] = useState<Shopping[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const shopping = await loadShoppings() as Shopping[];
-                setShoppings(shopping);
+                const shoppingData = await loadShoppings() as Shopping[];
+                const shoppings = shoppingData.length > 4 ? shoppingData.slice(0, 4) : shoppingData;
+                setShoppings(shoppings);
             } catch (err: any) {
-                console.log(err);
                 toast.error(err.message ?? 'Erro ao listar shoppings!');
             }
             finally {
@@ -61,7 +61,7 @@ export default function HomeShoppings() {
                 (
                     <>
                         <div className="w-full flex flex-col xl:flex-row items-center gap-4">
-                            {shoppings && shoppings.length == 0 ?
+                            {shoppings.length == 0 ?
                                 (
                                     <div className="flex w-80% flex-col item-center justify-center">
                                         <h1 className="text-2xl">Nenhum shopping cadastrado!</h1>
@@ -72,7 +72,7 @@ export default function HomeShoppings() {
                                 (
                                     <>
                                         {
-                                            shoppings?.slice(0, 4).map((s) => (
+                                            shoppings.map((s) => (
                                                 <ShoppingCard shoppingObj={s} key={s.id} isHome={true} />
                                             ))
                                         }

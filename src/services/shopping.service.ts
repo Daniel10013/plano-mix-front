@@ -1,7 +1,7 @@
 import axios from "axios";
 import api from "../lib/api";
 import { ShoppingStores } from "../types/Stores/Stores";
-import type { ShoppingRequest, Shopping, ViaCepResponse, ShoppingCreate, ShoppingUpdate } from "../types/Shoppings/Shoppings";
+import type { ShoppingRequest, Shopping, ViaCepResponse, ShoppingCreate, ShoppingUpdate, ShoppingFilter } from "../types/Shoppings/Shoppings";
 
 export async function loadShoppings() {
     try {
@@ -15,12 +15,14 @@ export async function loadShoppings() {
 
         return formatShoppings(data);
     }
-    catch (error: any) {
-        console.log(error);
-        return {
-            status: false,
-            message: error.response?.data.message ?? 'Erro ao pegar dados dos shoppings!'
-        }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar dados dos shoppings!!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
     }
 }
 
@@ -163,6 +165,28 @@ export async function getShoppingStores(id: number) {
         }));
 
         return { status:  responseData.status, data: stores };
+    }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar lojas do shopping!';
+
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+
+        throw customError;
+    }
+}
+
+export async function getShoppingFilter() {
+    try {
+        const request = await api.get('shopping');
+        const data = request.data as ShoppingRequest[];
+
+        const shoppingFilter: ShoppingFilter[] = data.map((s) => ({
+            value: s.id,
+            label: s.name
+        }));
+        return shoppingFilter;
     }
     catch (err: any) {
         const status = err.response?.status ?? 500;

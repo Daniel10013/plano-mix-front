@@ -15,19 +15,18 @@ export default function VisitDetailsModal({ isOpen, onClose, id }: { isOpen: boo
 
     useEffect(() => {
         const fetchData = async () => {
-            if(id == 0){
+            if (id == 0) {
                 return;
             }
             try {
                 const data = await getVisitDetails(id);
-                console.log(data);
                 setVisit(data.data)
-            }   
+            }
             catch (err: any) {
                 onClose();
                 Swal.fire({
                     icon: 'error',
-                    title: "Erro!", text: err.message ?? 'Erro ao pegar detalhes da visita', 
+                    title: "Erro!", text: err.message ?? 'Erro ao pegar detalhes da visita',
                 })
             }
             finally {
@@ -99,14 +98,12 @@ export default function VisitDetailsModal({ isOpen, onClose, id }: { isOpen: boo
                                 <div className="w-full flex flex-col">
                                     {visit?.stores.map((store, index) => {
                                         return (
-                                            <>
-                                                <div key={index} className="text-[16px] w-full hidden grid-cols-4 border border-l-0 border-r-0 xl:grid px-0 py-2 mb-1 border-t-gray-300 border-b-gray-300">
-                                                    <h1 className="text-center">{store.name}</h1>
-                                                    <h1 className="text-center">{capitalizeWords(store.classification)}</h1>
-                                                    <h1 className="text-center">{capitalizeWords(store.segment)}</h1>
-                                                    <h1 className="text-center">{!store.activity ? 'Sem atividade' : capitalizeWords(store.activity)}</h1>
-                                                </div>
-                                            </>
+                                            <div key={index} className="text-[16px] w-full hidden grid-cols-4 border border-l-0 border-r-0 xl:grid px-0 py-2 mb-1 border-t-gray-300 border-b-gray-300">
+                                                <h1 className="text-center">{store.name}</h1>
+                                                <h1 className="text-center">{capitalizeWords(store.classification)}</h1>
+                                                <h1 className="text-center">{capitalizeWords(store.segment)}</h1>
+                                                <h1 className="text-center">{!store.activity ? 'Sem atividade' : capitalizeWords(store.activity)}</h1>
+                                            </div>
                                         );
                                     })}
                                 </div>

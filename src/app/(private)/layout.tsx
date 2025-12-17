@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies, headers } from "next/headers";
 import Layout from "@/src/components/Layout/Layout";
 import { JwtPayload } from "@/src/types/Users/Users";
+import { logout } from "@/src/services/auth.service";
 
 const privateRoutes = ['/users', '/classification'];
 
@@ -17,6 +18,15 @@ export default async function PrivateLayout({ children }: { children: React.Reac
   
   const pathName = (await headers()).get('x-pathname');
   const tokenValue = jwtDecode(token.value) as JwtPayload;
+  if (tokenValue.exp * 1000 < Date.now())  {
+    try {
+      await logout();
+    }
+    finally {
+      redirect("/login");
+    }
+  }
+  
   const userAccess = tokenValue.type;
   const userName = tokenValue.name;
 

@@ -14,6 +14,6 @@ export type JwtPayload = {
   name: string,
   email: string,
   type: 'default' | 'admin',
-  iat: Date,
-  exp: Date
+  iat: number,
+  exp: number
 }
