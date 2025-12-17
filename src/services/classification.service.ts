@@ -51,3 +51,56 @@ export async function getActivities() {
         throw customError;
     }
 }
+
+export async function createClassification(name: string): Promise<{ status: boolean, message: string }> {
+    try {
+        const response = await api.post('/classification/', { name: name });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function createSegment(classificationId: number, name: string): Promise<{ status: boolean, message: string }> {
+    try {
+        const response = await api.post("/classification/segment", { name: name, classification_id: Number(classificationId) });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function createActivity(segmentId:number, name:string): Promise<{ status: boolean, message: string }> {
+        try {
+        const response = await api.post("classification/segment/activity", { name: name, segment_id: Number(segmentId) });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
