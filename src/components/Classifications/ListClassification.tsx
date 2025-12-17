@@ -4,11 +4,11 @@ import { PlusIcon } from "@heroicons/react/24/outline"
 import AccordionClassification from "@/src/components/Classifications/AccordionClassification"
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { capitalizeWords } from "@/src/lib/utils";
-import { getMix } from "@/src/services/classification.service";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Mix } from "@/src/types/Classifications/Classification";
 import ModalCreateClassification from "./Modal/ModalCreateClassification";
+import ModalEditClassification from "./Modal/ModalEditClassification";
 import type { Classification, Segment, Activity } from "@/src/types/Classifications/Classification";
 import { getClassifications } from "@/src/services/classification.service";
 import { getSegments } from "@/src/services/classification.service";
@@ -19,10 +19,16 @@ export default function ListClassification() {
 
     const [isLoading, setLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [editIsOpen, setEditIsOpen] = useState<boolean>(false);
     const [classificationData, setClassificationData] = useState<Mix[]>([]);
     const [classifications, setClassifications] = useState<Classification[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);
     const [activities, setActivities] = useState<Activity[]>([]);
+    const [fatherId, setFatherId] = useState<number>(0);
+
+    const [name, setName] = useState<string>("");
+    const [id, setId] = useState<number>(0);
+    const [editType, setEditType] = useState<string>("");
 
 
     function groupData(data: Mix[]) {
@@ -79,20 +85,6 @@ export default function ListClassification() {
     useEffect(() => {
         getAllClassification();
     }, [])
-
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const data = await getMix();
-            setClassificationData(data);
-        } catch (err: any) {
-            toast.error("Erro em carregar as classificações");
-        }
-        finally {
-            setLoading(false)
-        }
-
-    }
 
     const getAllClassification = async () => {
         try {
@@ -169,10 +161,31 @@ export default function ListClassification() {
         }
     };
 
+    const handleEditClassification = (id: number, name: string) => {
+        setName(name);
+        setId(id);
+        setEditType("CLASSIFICACAO")
+        setEditIsOpen(true);
+    }
+    const handleEditSegment = (id: number, name: string, classification_id: number) => {
+        setName(name);
+        setId(id);
+        setEditType("SEGMENTO")
+        setFatherId(classification_id)
+        setEditIsOpen(true);
+    }
+    const handleEditActivity = (id: number, name: string, segment_id: number) => {
+        setName(name);
+        setId(id);
+        setEditType("ATIVIDADE")
+        setFatherId(segment_id)
+        setEditIsOpen(true);
+    }
 
     return (
         <>
-            <ModalCreateClassification isOpen={isOpen} onClose={() => { setIsOpen(false) }} classifications={classifications} segments={segments} reloadClassification={()=>{getAllClassification()}}></ModalCreateClassification>
+            <ModalCreateClassification isOpen={isOpen} onClose={() => { setIsOpen(false) }} classifications={classifications} segments={segments} reloadClassification={() => { getAllClassification() }}></ModalCreateClassification>
+            <ModalEditClassification isOpen={editIsOpen} onClose={() => { setEditIsOpen(false) }} nameEdit={name} idEdit={id} editType={editType} reloadClassification={() => { getAllClassification() }} fatherId={fatherId}></ModalEditClassification>
             <div className="w-full gap-4 flex flex-col items-center">
                 <div className="flex xl:flex-row w-full xl:w-[60%] justify-between">
                     <h1 className="w-[50%] flex items-center text-3xl text-gray-500">Classificação</h1>
@@ -211,7 +224,7 @@ export default function ListClassification() {
 
                                                 <div className="flex gap-1 xl:gap-2 xl:mr-10 mr-2 ">
                                                     <button
-                                                        onClick={() => console.log("edit classification", classif.classification_id)}
+                                                        onClick={(e) => {e.stopPropagation();handleEditClassification(classif.classification_id, classif.classification)}}
                                                         className="p-1 hover:bg-gray-200 rounded"
                                                     >
                                                         <Pencil2Icon className="xl:w-6 xl:h-6 w-5 h-5 text-[#6DA7FF]" />
@@ -230,7 +243,7 @@ export default function ListClassification() {
 
                                                         <div className="flex gap-2">
                                                             <button
-                                                                onClick={() => console.log("edit segment", segment.segment_id)}
+                                                                onClick={(e) => {e.stopPropagation();handleEditSegment(segment.segment_id, segment.segment, classif.classification_id )}}
                                                                 className="p-1 hover:bg-gray-200 rounded"
                                                             >
                                                                 <Pencil2Icon className="xl:w-5 xl:h-5 w-4 h-4 text-[#6DA7FF]" />
@@ -252,7 +265,7 @@ export default function ListClassification() {
 
                                                             <div className="flex gap-2">
                                                                 <button
-                                                                    onClick={() => console.log("edit activity", act.activity_id)}
+                                                                    onClick={(e) => {e.stopPropagation();handleEditActivity(act.activity_id, act.activity, segment.segment_id)}}
                                                                     className="p-1 hover:bg-gray-200 rounded"
                                                                 >
                                                                     <Pencil2Icon className="xl:w-4 xl:h-4 w-3 h-3 text-[#6DA7FF]" />

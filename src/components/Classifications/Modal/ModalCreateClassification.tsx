@@ -3,7 +3,6 @@
 import Modal from "../../Layout/Modal/Modal";
 import { Classification, Segment, Activity } from "@/src/types/Classifications/Classification";
 import { useState, useEffect } from "react";
-import Swal from 'sweetalert2';
 import Select from "react-select";
 import { capitalizeWords } from "@/src/lib/utils";
 import { createClassification } from "@/src/services/classification.service";

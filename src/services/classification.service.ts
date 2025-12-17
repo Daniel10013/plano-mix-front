@@ -87,9 +87,63 @@ export async function createSegment(classificationId: number, name: string): Pro
     }
 }
 
-export async function createActivity(segmentId:number, name:string): Promise<{ status: boolean, message: string }> {
-        try {
+export async function createActivity(segmentId: number, name: string): Promise<{ status: boolean, message: string }> {
+    try {
         const response = await api.post("classification/segment/activity", { name: name, segment_id: Number(segmentId) });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function editClassification(classification_id: number, name: string): Promise<{ status: boolean, message: string }> {
+    try {
+        const response = await api.put("classification/" + classification_id, { name: name });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function editSegment(segment_id: number, name: string, classification_id: number): Promise<{ status: boolean, message: string }> {
+    try {
+        const response = await api.put("classification/segment/" + segment_id, { name: name, classification_id: Number(classification_id) });
+        const { success, message } = response.data as { success: boolean, message: string };
+        return {
+            status: success,
+            message: message
+        }
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar classificação';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function editActivity(activity_id: number, name: string, segment_id: number): Promise<{ status: boolean, message: string }> {
+    try {
+        const response = await api.put("classification/segment/activity/" + activity_id, { name: name, segment_id: Number(segment_id) });
         const { success, message } = response.data as { success: boolean, message: string };
         return {
             status: success,
