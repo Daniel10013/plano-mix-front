@@ -10,7 +10,7 @@ export default async function PublicLayout({
 }) {
   const cookieStore = cookies();
   const token = (await cookieStore).get("auth_token");
-
+  console.log(token);
   if (!token) {
     return <>{children}</>;
   }
