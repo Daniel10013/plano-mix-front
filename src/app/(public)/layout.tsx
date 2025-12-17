@@ -27,29 +27,53 @@
 //     return <>{children}</>;
 //   }
 // }
-import { redirect } from "next/navigation";
+'use client';
 
-async function getMe() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-    credentials: "include",
-    cache: "no-store",
-  });
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-  if (!res.ok) return null;
-  return res.json();
-}
-
-export default async function PublicLayout({
+export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const me = await getMe();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-  // se já estiver logado, não pode ver login/register
-  if (me) {
-    redirect("/home");
-  }
+  useEffect(() => {
+    const getMe = async () => {
+      console.log('[PUBLIC LAYOUT] chamando /me');
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/me`,
+          {
+            credentials: 'include',
+            cache: 'no-store',
+          }
+        );
+
+        console.log('[PUBLIC LAYOUT] status /me:', res.status);
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log('[PUBLIC LAYOUT] ME:', data);
+          router.replace('/home');
+          return;
+        }
+
+        console.log('[PUBLIC LAYOUT] não logado');
+      } catch (err) {
+        console.error('[PUBLIC LAYOUT] erro no /me', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getMe();
+  }, [router]);
+
+  if (loading) return null; // ou loader
 
   return <>{children}</>;
 }

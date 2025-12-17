@@ -43,34 +43,65 @@
 //   );
 // }
 
-import { redirect } from "next/navigation";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Layout from "@/src/components/Layout/Layout";
+
 type MeResponse = {
   name: string;
   email: string;
   type: 'admin' | 'default';
 };
 
-async function getMe(): Promise<MeResponse | null> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-    credentials: "include",
-    cache: "no-store",
-  });
-
-  if (!res.ok) return null;
-  return res.json();
-}
-
-export default async function PrivateLayout({
+export default function PrivateLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const me = await getMe();
+  const router = useRouter();
+  const [me, setMe] = useState<MeResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!me) {
-    redirect("/login");
-  }
+  useEffect(() => {
+    const getMe = async () => {
+      console.log('[PRIVATE LAYOUT] chamando /me');
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/me`,
+          {
+            credentials: 'include',
+            cache: 'no-store',
+          }
+        );
+
+        console.log('[PRIVATE LAYOUT] status /me:', res.status);
+
+        if (!res.ok) {
+          console.log('[PRIVATE LAYOUT] não logado → redirect /login');
+          router.replace('/login');
+          return;
+        }
+
+        const data = await res.json();
+        console.log('[PRIVATE LAYOUT] ME:', data);
+        setMe(data);
+      } catch (err) {
+        console.error('[PRIVATE LAYOUT] erro no /me', err);
+        router.replace('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getMe();
+  }, [router]);
+
+  if (loading) return null; // ou loader
+
+  if (!me) return null;
 
   return (
     <Layout permission={me.type} userName={me.name}>
