@@ -96,16 +96,21 @@ export default function VisitDetailsModal({ isOpen, onClose, id }: { isOpen: boo
                                     <h1 className="text-center">Atividade</h1>
                                 </div>
                                 <div className="w-full flex flex-col">
-                                    {visit?.stores.map((store, index) => {
-                                        return (
-                                            <div key={index} className="text-[16px] w-full hidden grid-cols-4 border border-l-0 border-r-0 xl:grid px-0 py-2 mb-1 border-t-gray-300 border-b-gray-300">
+                                    {visit?.stores
+                                        .filter(store => store.status !== 'deleted')
+                                        .map((store, index) => (
+                                            <div
+                                                key={index}
+                                                className="text-[16px] w-full hidden grid-cols-4 border border-l-0 border-r-0 xl:grid px-0 py-2 mb-1 border-t-gray-300 border-b-gray-300"
+                                            >
                                                 <h1 className="text-center">{store.name}</h1>
                                                 <h1 className="text-center">{capitalizeWords(store.classification)}</h1>
                                                 <h1 className="text-center">{capitalizeWords(store.segment)}</h1>
-                                                <h1 className="text-center">{!store.activity ? 'Sem atividade' : capitalizeWords(store.activity)}</h1>
+                                                <h1 className="text-center">
+                                                    {!store.activity ? 'Sem atividade' : capitalizeWords(store.activity)}
+                                                </h1>
                                             </div>
-                                        );
-                                    })}
+                                        ))}
                                 </div>
                             </div>
                         </>

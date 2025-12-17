@@ -1,3 +1,5 @@
+import { VisitStore } from "../Stores/Stores"
+
 export type Visit = {
     id: number,
     shopping_name: string,
@@ -5,16 +7,6 @@ export type Visit = {
     observation: string
     username: string,
     date: string
-}
-
-export type VisitCompare = {
-    date: string,
-    stores:  {
-        name: string,
-        classification: string,
-        segment: string,
-        activity?: string
-    }[]
 }
 
 export type VisitDetails = {
@@ -27,5 +19,12 @@ export type VisitDetails = {
         classification: string,
         segment: string,
         activity?: string
+        status: 'active' | 'deleted'
     }[]
+}
+
+export type VisitCreate = {
+    observation: string,
+    shopping_id: number,
+    shopping_stores: VisitStore[]
 }

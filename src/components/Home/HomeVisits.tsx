@@ -20,7 +20,6 @@ export default function HomeVisits() {
                 const data = await getRecentVisits() as Visit[];
                 setVisits(data);
             } catch (err: any) {
-                console.log(err);
                 toast.error(err.message ?? 'Erro ao listar visitas!');
             }
             finally {

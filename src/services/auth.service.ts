@@ -30,7 +30,6 @@ export async function logout(): Promise<{ status: boolean, message: string }> {
         }
     }
     catch (error: any) {
-        console.log(error);
         return {
             status: false,
             message: error.response?.data.message ?? 'Erro ao fazer logout!'

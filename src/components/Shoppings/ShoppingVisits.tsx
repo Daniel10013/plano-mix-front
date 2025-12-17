@@ -21,15 +21,21 @@ export default function ShoppingVisits({ id }: { id: number }) {
     const [fullShoppingVisits, setFullShoppingVisits] = useState<Visit[]>([]);
     
     const [idDetails, setIdDetails] = useState<number>(0);
-    const [selectedId, setSelectedId] = useState<number>(0);
-    const [selected2Id, setSelected2Id] = useState<number>(0);
+    const [selectedVisits, setSelectedVisits] = useState<number[]>([]);
+
+    const toggleSelectVisit = (id: number) => {
+        setSelectedVisits(prev => {
+            if (prev.includes(id)) return prev.filter(v => v !== id);
+            if (prev.length < 2) return [...prev, id];
+            return prev;
+        });
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await getVisitsByShopping(id);
                 setFullShoppingVisits(data.data);
-                console.log(shoppingVisits.length);
                 setShoppingVisits(data.data);
             }
             catch (err: any) {
@@ -77,7 +83,7 @@ export default function ShoppingVisits({ id }: { id: number }) {
 
     return (
         <>
-            <CompareVisitModal id1={selectedId} id2={selected2Id} isOpen={modalIsOpen} onClose={() => { setModalIsOpen(false) }} />
+            <CompareVisitModal id1={selectedVisits[0]} id2={selectedVisits[1]} isOpen={modalIsOpen} onClose={() => { setModalIsOpen(false) }} />
             <VisitDetailsModal id={idDetails} isOpen={modalDetailsIsOpen} onClose={() => { setModalDetailsIsOpen(false) }} />
             <div className="flex flex-col gap-4 xl:gap-2">
                 <div className="flex flex-col xl:flex-row gap-2">
@@ -88,11 +94,11 @@ export default function ShoppingVisits({ id }: { id: number }) {
                     </div>
                     <button
                         onClick={() => setModalIsOpen(true)}
-                        disabled={isLoading || shoppingVisits.length < 2}
+                        disabled={isLoading || shoppingVisits.length < 2 || selectedVisits.length != 2}
                         className={`
                         w-full xl:w-[30%] text-2xl p-2 xl:p-0 xl:text-[20px] rounded-[10px]
                         transition-all duration-200
-                        ${isLoading || shoppingVisits.length < 2
+                        ${isLoading || shoppingVisits.length < 2 || selectedVisits.length != 2
                             ? 'bg-[#c6ecd0] text-gray-400 cursor-not-allowed'
                             : 'bg-[#6FD98B] hover:bg-[#35c95d] cursor-pointer'}
                     `}
@@ -129,11 +135,14 @@ export default function ShoppingVisits({ id }: { id: number }) {
                                             {
                                                 shoppingVisits.map(
                                                     (s) => {
+                                                        const isSelected = selectedVisits.includes(s.id);
                                                         return (
-                                                            <div key={s.id}
+                                                            <div key={s.id} onClick={() => {toggleSelectVisit(s.id)} }
                                                                 className={`
-                                                        w-full rounded-[10px] border border-gray-300 p-3 transition-all duration-200 hover:border-[#8173FF]
+                                                        w-full rounded-[10px] border p-3 transition-all duration-200 hover:border-[#8173FF]
                                                         cursor-pointer
+                                                        
+                                                         ${isSelected ? 'border-[#8173FF] bg-[#f5f9ff]' : 'border-gray-300 hover:border-[#8173FF]'}
                                                     `}
                                                             >
                                                                 <div className="flex gap-1">

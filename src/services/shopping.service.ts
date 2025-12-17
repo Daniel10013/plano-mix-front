@@ -9,7 +9,6 @@ export async function loadShoppings() {
         const data = request.data as ShoppingRequest[];
 
         if (request.status != 200) {
-            console.log(request);
             throw new Error('Erro ao pegar dados dos shoppings');
         }
 
@@ -144,27 +143,9 @@ export function formatCep(value: string): string {
 export async function getShoppingStores(id: number) {
     try {
         const response = await api.get(`/store/shopping/${id}`);
-        const responseData = response.data as {
-            status: boolean,
-            data: {
-                store_id: number;
-                store_name: string;
-                store_classification: string;
-                store_segment: string;
-                store_activity: string | null;
-                store_status: 'active' | 'deleted';
-            }[]
-        };
-        const stores: ShoppingStores[] = responseData.data.map((s: any) => ({
-            id: s.store_id,
-            name: s.store_name,
-            classification: s.store_classification,
-            segment: s.store_segment,
-            activity: s.store_activity ?? undefined,
-            status: s.store_status,
-        }));
+        const responseData = response.data as {sucess: boolean, data: ShoppingStores[]}
 
-        return { status:  responseData.status, data: stores };
+        return { status:  responseData.sucess, data: responseData.data };
     }
     catch (err: any) {
         const status = err.response?.status ?? 500;

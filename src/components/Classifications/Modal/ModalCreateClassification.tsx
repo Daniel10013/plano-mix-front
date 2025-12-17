@@ -76,7 +76,6 @@ export default function ModalCreateClassification({ isOpen, onClose, classificat
             }
         }
         if (addType == "SEGMENTO") {
-            console.log(classificationId, name);
             if (classificationId !== 0) {
                 try {
                     const result = await createSegment(classificationId, name);

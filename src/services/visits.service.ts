@@ -1,12 +1,13 @@
 import api from "../lib/api";
-import { Visit, VisitDetails } from "../types/Visits/Visits";
+import { VisitCompare } from "../types/Stores/Stores";
+import { Visit, VisitCreate, VisitDetails } from "../types/Visits/Visits";
 interface ApiVisitResponse {
     status: boolean;
     data: {
         id: number;
         observation: string;
         user: { name: string };
-        shopping: { name: string, id: number};
+        shopping: { name: string, id: number };
         date: string;
     }[];
 }
@@ -42,7 +43,6 @@ export async function getRecentVisits(): Promise<Visit[]> {
 
     } catch (err: any) {
         const status = err.response?.status ?? 500;
-        console.log(err);
         const message = err.response?.data?.message ?? 'Erro ao pegar visitas do shopping!';
         const customError = new Error(message) as Error & { status?: number };
         customError.status = status;
@@ -53,10 +53,10 @@ export async function getRecentVisits(): Promise<Visit[]> {
 export async function getVisitDetails(visitId: number) {
     try {
         const response = await api.get(`/visit/details/${visitId}`);
-        const responseData = response.data as {success: boolean, data: VisitDetails};
+        const responseData = response.data as { success: boolean, data: VisitDetails };
         return {
             status: responseData.success,
-            data: responseData.data 
+            data: responseData.data
         };
     }
     catch (err: any) {
@@ -68,4 +68,49 @@ export async function getVisitDetails(visitId: number) {
     }
 }
 
+export async function createVisit(visitData: VisitCreate) {
+    try {
+        const response = await api.post("/visit", visitData);
+        const data = response.data as { success: boolean, message: string }
+        return {
+            status: data.success,
+            message: data.message
+        }
 
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar visita!';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function compareVisits(id1: number, id2: number) {
+    try {
+        const response = await api.get(`/visit/${id1}/${id2}`);
+        const data = response.data as { success: boolean, data: { visit1: VisitCompare[], visit2: VisitCompare[] } }
+        return data;
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar comaparação das visitas!';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
+export async function getVisitsDates(id1: number, id2: number) {
+    try {
+        const visit1 = await getVisitDetails(id1);
+        const visit2 = await getVisitDetails(id2);
+        return {date1: visit1.data.date, date2: visit2.data.date}
+
+    } catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao pegar datas das visitas!';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}

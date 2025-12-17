@@ -61,7 +61,6 @@ export default function ForgotPassword() {
             }
         }
         catch (err: any) {
-            console.log(err);
             setErrorMessage(err?.message || "Erro ao trocar a senha!");
         } finally {
             setIsLoading(false)

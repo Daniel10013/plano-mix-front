@@ -99,7 +99,6 @@ export default function VisitPage() {
 
     const applyFilterDebounced = debounce(() => {
         const result = filterVisits(searchInput, selectedShopping);
-        console.log(result);
         setFilteredVisits(result);
         setFilterLoading(false);
     }, 500);
