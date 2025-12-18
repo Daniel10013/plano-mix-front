@@ -170,7 +170,7 @@ export default function VisitPage() {
                     </div>
                 </div>
                 <div>
-                    <div className={(!isLoading || !filterLoading) && filteredVisits.length == 0 ? 'w-full flex items-center justify-center' : 'w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'}>
+                    <div className={(isLoading || !filterLoading) && filteredVisits.length == 0 ? 'w-full flex items-center justify-center' : 'w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'}>
                         {isLoading  || filterLoading ?
                             (
                                 <>

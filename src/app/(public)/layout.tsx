@@ -13,6 +13,10 @@ export default function PublicLayout({
 
   useEffect(() => {
     const getMe = async () => {
+      console.log('--- PUBLIC LAYOUT START ---');
+
+      // 1️⃣ Ver cookies no browser
+      console.log('[PUBLIC] document.cookie:', document.cookie);
 
       try {
         const res = await fetch(
@@ -23,15 +27,24 @@ export default function PublicLayout({
           }
         );
 
-        console.log('[PUBLIC LAYOUT] status /me:', res.status);
+        console.log('[PUBLIC] /get-me status:', res.status);
+        console.log('[PUBLIC] response headers:', [...res.headers.entries()]);
 
         if (res.ok) {
           const data = await res.json();
+          console.log('[PUBLIC] /get-me DATA:', data);
+
+          console.log('[PUBLIC] USUÁRIO LOGADO → redirect /home');
           router.replace('/home');
           return;
         }
+
+        console.log('[PUBLIC] NÃO LOGADO (status != 200)');
+
       } catch (err) {
+        console.error('[PUBLIC] ERRO NO FETCH /get-me:', err);
       } finally {
+        console.log('[PUBLIC] FIM PUBLIC LAYOUT');
         setLoading(false);
       }
     };
