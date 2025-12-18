@@ -16,28 +16,32 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
       text: 'Deseja encerrar sua sessão?', showLoaderOnConfirm: true,
       icon: 'warning', showCancelButton: true, cancelButtonText: 'Não',
       showConfirmButton: true, confirmButtonText: 'Sim'
-    }).then(async (action)=> {
-      if(action.isConfirmed){
+    }).then(async (action) => {
+      if (action.isConfirmed) {
         await logout();
       }
     })
   }
 
-  const logout = async () =>  {
-    const {status, message} = await endSession();
-    if(status == false){
+  const logout = async () => {
+    const { status, message } = await endSession();
+
+    if (!status) {
       Swal.close();
       Swal.fire({
         title: 'Erro!',
         text: message,
-        icon: 'error', confirmButtonText: 'Ok'
+        icon: 'error',
+        confirmButtonText: 'Ok',
       });
       return;
     }
 
     sessionStorage.setItem("showLogoutToast", "1");
-    router.push('/login');
-  }
+
+    router.replace('/login');
+    router.refresh();
+  };
 
   return (
     <>
@@ -65,7 +69,7 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
           </motion.div>
         </motion.div>
 
-        <ArrowLeftEndOnRectangleIcon height={32} onClick={()=>{handleLogoutClick()}} className='cursor-pointer' />
+        <ArrowLeftEndOnRectangleIcon height={32} onClick={() => { handleLogoutClick() }} className='cursor-pointer' />
       </header>
 
       {/* DESKTOP HEADER */}
@@ -93,7 +97,7 @@ export default function Topbar({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
           )}
         </motion.div>
 
-        <ArrowLeftEndOnRectangleIcon height={32}  onClick={()=>{handleLogoutClick()}} className='cursor-pointer transition-all duration-200 hover:opacity-60' />
+        <ArrowLeftEndOnRectangleIcon height={32} onClick={() => { handleLogoutClick() }} className='cursor-pointer transition-all duration-200 hover:opacity-60' />
       </header>
     </>
   );
