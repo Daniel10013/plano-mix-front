@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import Details from "@/src/components/Shoppings/DetailsPage";
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    const numberId = Number(id)
+export default function Page({ params }: { params: { id: string } }) {
+    const numberId = Number(params.id);
+
     if (!Number.isInteger(numberId) || numberId <= 0) {
         redirect("/shoppings");
     }
@@ -12,5 +12,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <>
             <Details shoppingId={numberId} />
         </>
-    )
+    );
 }
