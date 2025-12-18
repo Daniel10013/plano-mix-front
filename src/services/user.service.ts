@@ -58,7 +58,7 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 export async function getUserById(id: number): Promise<User> {
-    const response = await api.get("/users/" + id);
+    const response = await api.get("/users/details/" + id);
     if (response.status != 200) {
         throw new Error("Erro ao listar usuário");
     }
