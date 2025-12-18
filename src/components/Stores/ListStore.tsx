@@ -70,7 +70,6 @@ export default function ListStore() {
 
     const fetchData = async () => {
         try {
-            setIsLoading(true);
             const data = await getAllStores();
             setAllStores(data);
             setStores(data);
