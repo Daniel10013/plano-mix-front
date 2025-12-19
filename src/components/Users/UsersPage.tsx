@@ -64,7 +64,7 @@ export default function UsersPage() {
             .then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        icon: "success", title: "Sucesso!", text: "E-mail enviado com sucesso!", confirmButtonText: "Entendido!"
+                        icon: "success", title: "Sucesso!", html: "E-mail enviado com sucesso!<br>Confira se não chegou no span!", confirmButtonText: "Entendido!"
                     })
                 }
             })
