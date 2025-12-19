@@ -1,27 +1,28 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Layout from "@/src/components/Layout/Layout";
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-type MeResponse = {
-  name: string;
-  email: string;
-  type: 'admin' | 'default';
-};
-
-export default function PrivateLayout({
+export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const [me, setMe] = useState<MeResponse | null>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getMe = async () => {
-      console.log('[PRIVATE LAYOUT] chamando /me');
+      // ✅ libera reset-password se tiver token
+      if (pathname === '/reset-password') {
+        const token = searchParams.get('token');
+        if (token) {
+          setLoading(false);
+          return;
+        }
+      }
 
       try {
         const res = await fetch(
@@ -32,31 +33,21 @@ export default function PrivateLayout({
           }
         );
 
-
-        if (!res.ok) {
-          router.replace('/login');
+        if (res.ok) {
+          router.replace('/home');
           return;
         }
-
-        const data = await res.json();
-        setMe(data);
       } catch (err) {
-        router.replace('/login');
+        // ignora
       } finally {
         setLoading(false);
       }
     };
 
     getMe();
-  }, [router]);
+  }, [router, pathname, searchParams]);
 
   if (loading) return null;
 
-  if (!me) return null;
-
-  return (
-    <Layout permission={me.type} userName={me.name}>
-      {children}
-    </Layout>
-  );
+  return <>{children}</>;
 }

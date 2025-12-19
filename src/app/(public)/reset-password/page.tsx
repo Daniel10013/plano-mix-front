@@ -2,9 +2,11 @@
 
 import Swal from 'sweetalert2';
 import { useState, useEffect } from 'react'
+import { logout } from '@/src/services/auth.service';
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { useSearchParams, useRouter } from "next/navigation";
 import { changePassword } from '@/src/services/user.service';
+
 
 export default function ForgotPassword() {
 
@@ -49,7 +51,8 @@ export default function ForgotPassword() {
                 Swal.fire({
                     icon: 'success', title: 'Senha trocada com sucesso!',
                     html: message + '<br>Favor efetuar o login novamente!', confirmButtonColor: '#8173ff',
-                }).then(()=>{
+                }).then(async ()=>{
+                    await logout();
                     router.push('/login');
                 })
                 return;
