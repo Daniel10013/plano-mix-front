@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function PublicLayout({
   children,
@@ -10,15 +10,12 @@ export default function PublicLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const isResetPassword = pathname === '/reset-password';
-    const token = searchParams.get('token');
+  const isResetPassword = pathname === '/reset-password';
 
-    if (isResetPassword && token) {
+  useEffect(() => {
+    if (isResetPassword) {
       setLoading(false);
       return;
     }
@@ -37,15 +34,14 @@ export default function PublicLayout({
           router.replace('/home');
           return;
         }
-      } catch (err) {
-        // ignora erro
+      } catch (_) {
       } finally {
         setLoading(false);
       }
     };
 
     getMe();
-  }, [router, pathname, searchParams]);
+  }, [router, isResetPassword]);
 
   if (loading) return null;
 
