@@ -279,7 +279,7 @@ export default function CreateVisitForm() {
                         ? null
                         : optionShopping.find(o => o.value === selectedShopping) ?? null
                 }
-                placeholder="Selecione a Classificação"
+                placeholder="Selecione um Shopping..."
                 onChange={(v) => { handleSelectShopping(v?.value ?? 0) }}
                 noOptionsMessage={() => "Nenhum item encontrado!"}
                 options={optionShopping}

@@ -74,7 +74,7 @@ export default function CompareVisitModal({ id1, id2, isOpen, onClose }: { id1: 
                                 <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
                                     {
                                         visit1.map((s, index) => (
-                                            <div key={index} className={`${s.status == 'deleted' ? 'bg-[#eaeaea]' : ''}`}>
+                                            <div key={index} className={`rounded-[10px] xl:rounded-none ${s.status == 'deleted' ? 'bg-[#eaeaea]' : ''}`}>
                                                 <div className={`text-[20px] text-gray-600 w-full hidden grid-cols-4 border border-l-0 border-r-0 xl:grid px-0 py-2 border-t-0 border-b-gray-300`}>
                                                     <h1 className="text-center">{s.name}</h1>
                                                     <h1 className="text-center">{capitalizeWords(s.classification)}</h1>
