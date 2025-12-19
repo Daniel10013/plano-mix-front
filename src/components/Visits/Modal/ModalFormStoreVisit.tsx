@@ -53,7 +53,7 @@ export default function ModalFormStoreVisit({type, isOpen, onClose, stores, addS
             return;
         }
 
-        if(selectedStoreLeft == selectedStoreRight){
+        if((selectedStoreLeft != 0 && selectedStoreRight != 0) && (selectedStoreLeft == selectedStoreRight)){
             setErrorMessage('A loja da esquerda não pode ser igual da direita!');
             return;
         }
