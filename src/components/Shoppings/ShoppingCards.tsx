@@ -76,10 +76,10 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards, setIdTo
                     <>
                         <div className="hidden xl:w-[20%] xl:flex items-center justify-between z-10">
                             <PencilSquareIcon width={30} className="text-blue-500 transition-all duration-200 cursor-pointer hover:text-blue-800"
-                                onClick={(e) => { e.stopPropagation(); handleEdit(shoppingObj.id) }}
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleEdit(shoppingObj.id) }}
                             />
                             <TrashIcon width={30} className="text-red-500 transition-all duration-200 cursor-pointer hover:text-red-800"
-                                onClick={(e) => { e.stopPropagation(); handleDelete(shoppingObj.id, shoppingObj.name) }}
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(shoppingObj.id, shoppingObj.name) }}
                             />
                         </div>
                     </>) : (<></>)}
@@ -103,7 +103,7 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards, setIdTo
                             ">
                                 Editar
                                 <PencilSquareIcon width={30}
-                                    onClick={(e) => { e.stopPropagation(); handleEdit(shoppingObj.id) }}
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleEdit(shoppingObj.id) }}
                                 />
                             </span>
 
@@ -113,7 +113,7 @@ export default function ShoppingCard({ shoppingObj, isHome, reloadCards, setIdTo
                             ">
                                 Apagar
                                 <TrashIcon width={30}
-                                    onClick={(e) => { e.stopPropagation(); handleDelete(shoppingObj.id, shoppingObj.name) }}
+                                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(shoppingObj.id, shoppingObj.name) }}
                                 />
                             </span>
                         </div>
