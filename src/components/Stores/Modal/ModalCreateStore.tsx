@@ -6,12 +6,13 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import Modal from "../../Layout/Modal/Modal";
 import { capitalizeWords } from "@/src/lib/utils";
-import { createStore } from '@/src/services/store.service';
+import { StoreCreate } from '@/src/types/Stores/Stores';
+import { createStoreAndGetId } from '@/src/services/store.service';
 
-export default function ModalCreateStore({ isOpen, onClose, reloadStores, classifications, segments, activity }: {
+export default function ModalCreateStore({ isOpen, onClose, addStoreToMemory, classifications, segments, activity }: {
     isOpen: boolean,
     onClose: () => void,
-    reloadStores: () => void,
+    addStoreToMemory: (data:StoreCreate, id: number) => void,
     classifications: { id: number, name: string }[]
     segments: { id: number, name: string, classification_id: number }[]
     activity: { id: number, name: string, segment_id: number }[]
@@ -108,17 +109,19 @@ export default function ModalCreateStore({ isOpen, onClose, reloadStores, classi
         setErrorMessage('');
         try {
             setIsLoading(true);
-            const created = await createStore({
+            const data = {
                 name: name,
                 classification_id: classificationId,
                 segment_id: segmentId,
                 activity_id: activityId == 0 ? null : activityId
-            })
+            }
 
-            if(created == true){
+            const created = await createStoreAndGetId(data);
+
+            if(created){
                 onClose();
                 clearForm();
-                reloadStores();
+                addStoreToMemory(data, created);
                 Swal.fire({
                     title: 'Sucesso!', icon: "success", text: "Loja cadastrada com sucesso!", confirmButtonText: "Boa!"
                 })

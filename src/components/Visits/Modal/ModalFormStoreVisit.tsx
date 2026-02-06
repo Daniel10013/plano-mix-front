@@ -95,7 +95,7 @@ export default function ModalFormStoreVisit({type, isOpen, onClose, stores, addS
     }
 
     return (
-        <Modal title={type == 'create'? 'Cadastro de Loja' : 'Alterar Loja'} width={30} widthMobile={95} isOpen={isOpen} onClose={onClose}>
+        <Modal title={type == 'create'? 'Adicionar Loja a Visita' : 'Alterar Loja'} width={30} widthMobile={95} isOpen={isOpen} onClose={onClose}>
             <div className="flex flex-col w-full gap-4">
                 <div>
                     <label className="text-[#535353] text-[20px]">Selecione a loja:</label>

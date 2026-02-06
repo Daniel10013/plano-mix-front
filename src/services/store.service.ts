@@ -1,5 +1,5 @@
 import api from "../lib/api";
-import { Store, StoreCreate } from "../types/Stores/Stores";
+import { Store, StoreCreate, CreateStoreResponse } from "../types/Stores/Stores";
 
 export async function getAllStores() {
     try {
@@ -31,6 +31,21 @@ export async function createStore(data: StoreCreate): Promise<boolean> {
         throw customError;
     }
 }
+
+export async function createStoreAndGetId(data: StoreCreate): Promise<number> {
+    try {
+        const response = await api.post<CreateStoreResponse>(`/store`, data);
+        return response.data.id as number;
+    }
+    catch (err: any) {
+        const status = err.response?.status ?? 500;
+        const message = err.response?.data?.message ?? 'Erro ao criar loja!';
+        const customError = new Error(message) as Error & { status?: number };
+        customError.status = status;
+        throw customError;
+    }
+}
+
 
 export async function updateStore(id: number, data: StoreCreate): Promise<boolean> {
     try {

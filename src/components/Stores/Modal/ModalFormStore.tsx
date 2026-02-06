@@ -352,52 +352,6 @@ export default function ModalFormStore({
                 )
 
             }
-
-            {/* <div className="flex flex-col gap-4">
-                <input
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Nome da loja"
-                    disabled={isLoading}
-                    className="p-2 border rounded"
-                />
-
-                <Select
-                    value={optionsClassification.find(o => o.value === classificationId) ?? null}
-                    options={optionsClassification}
-                    onChange={v => handleClassification(v?.value ?? 0)}
-                    placeholder="Classificação"
-                    isClearable
-                />
-
-                <Select
-                    value={optionsSegment.find(o => o.value === segmentId) ?? null}
-                    options={optionsSegment}
-                    onChange={v => handleSegment(v?.value ?? 0)}
-                    placeholder={classificationId === 0 ? 'Selecione classificação' : 'Segmento'}
-                    isDisabled={classificationId === 0}
-                    isClearable
-                />
-
-                <Select
-                    value={optionsActivity.find(o => o.value === activityId) ?? null}
-                    options={optionsActivity}
-                    onChange={v => setActivityId(v?.value ?? 0)}
-                    placeholder={getPlaceholderActivity()}
-                    isDisabled={segmentId === 0 || optionsActivity.length === 0}
-                    isClearable
-                />
-
-                <p className="text-red-500 text-center">{error}</p>
-
-                <button
-                    onClick={handleSubmit}
-                    disabled={isLoading}
-                    className="bg-[#8173FF] text-white p-2 rounded"
-                >
-                    {isEdit ? 'Salvar Alterações' : 'Cadastrar'}
-                </button>
-            </div> */}
         </Modal>
     );
 }

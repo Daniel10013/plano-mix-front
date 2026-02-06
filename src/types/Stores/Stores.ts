@@ -40,9 +40,15 @@ export type VisitStore = {
 }
 
 export type VisitCompare = {
-    name: string,
+    name: string, 
     classification: string,
     segment: string,
     activity: string | null,
     status: "active" | "deleted"
 }
+
+export type CreateStoreResponse = {
+  success: boolean;
+  message: string;
+  id: number;
+};
